@@ -1,6 +1,6 @@
 "use strict";
 
-const _URL = "https://10.88.218.81/E01_Dischi" // "http://localhost/4B"
+const _URL = "https://192.168.0.157/E01_Dischi" // "http://localhost/4B"
 // Se vuota viene assegnata in automatico l'origine da cui è stata scaricata la pagina
 
 function inviaRichiesta(method, url, parameters={}) {
