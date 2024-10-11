@@ -1,4 +1,5 @@
 import http from 'http';
+import fs from 'fs';
 import dispatcher from './dispatcher';
 import headers from './headers.json';
 import people from './people.json';
@@ -41,15 +42,21 @@ dispatcher.addListener('GET', '/api/people', function (req: any, res: any) {
 });
 
 dispatcher.addListener('GET', '/api/getDetails', function (req: any, res: any) {
-    const pName = req['GET'];
+    try {
+        const pName = JSON.parse(req['GET'].pName);
 
-    const person = people.results.find(function (p) {
-        return JSON.stringify(p.name) == JSON.stringify(pName);
-    });
+        const person = people.results.find(function (p) {
+            return JSON.stringify(p.name) == JSON.stringify(pName);
+        });
 
-    res.writeHead(200, headers.json);
-    res.write(JSON.stringify(person));
-    res.end();
+        res.writeHead(200, headers.json);
+        res.write(JSON.stringify(person));
+        res.end();
+    } catch (err) {
+        res.writeHead(400, headers.text);
+        res.write('invalid params');
+        res.end();
+    }
 });
 
 dispatcher.addListener('DELETE', '/api/deletePerson', function (req: any, res: any) {
@@ -61,7 +68,17 @@ dispatcher.addListener('DELETE', '/api/deletePerson', function (req: any, res: a
     });
     people.results.splice(index, 1);
 
-    res.writeHead(200, headers.json);
-    res.write(JSON.stringify({ 'res': 'ok' }));
-    res.end();
+    fs.writeFile('./people.json', JSON.stringify(people), function (err) {
+        if (!err) {
+            res.writeHead(200, headers.json);
+            res.write(JSON.stringify({ 'res': 'ok' }));
+            res.end();
+        }
+        else {
+            res.writeHead(500, headers.text);
+            res.write('Impossibile salvare i dati');
+            res.end();
+        }
+    });
+
 });

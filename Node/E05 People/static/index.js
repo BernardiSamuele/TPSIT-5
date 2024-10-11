@@ -35,10 +35,11 @@ window.onload = async function () {
   }
 
   async function showPeople(selectedCountry) {
-    const people = await inviaRichiesta('GET', '/api/people', { country: selectedCountry });
+    people = await inviaRichiesta('GET', '/api/people', { country: selectedCountry });
     if (people) {
       console.log(people);
       tabStudenti.empty();
+      divDettagli.hide();
       people.forEach((p) => {
         let tr = $('<tr>').appendTo(tabStudenti);
         $('<td>').appendTo(tr).text(`${p.name.title} ${p.name.first} ${p.name.last}`);
@@ -51,6 +52,7 @@ window.onload = async function () {
             $('<button>')
               .text('Dettagli')
               .on('click', function () {
+                currentPos = findIndex(p.name);
                 showDetails(p.name);
               })
           );
@@ -68,7 +70,7 @@ window.onload = async function () {
   }
 
   async function showDetails(pName) {
-    const person = await inviaRichiesta('GET', '/api/getDetails', pName);
+    const person = await inviaRichiesta('GET', '/api/getDetails', { pName });
     if (person) {
       console.log(person);
       divDettagli.show();
@@ -87,7 +89,49 @@ window.onload = async function () {
     if (data) {
       console.log(data);
       alert('Utente eliminato correttamente');
-      lstNazioni.trigger('click');
+      const selectedCountry = $('#dropdownMenuButton').text();
+      showPeople(selectedCountry);
     }
+  }
+
+  // divDettagli.find('a').get(0).on('click', function(){})
+  divDettagli
+    .get(0)
+    .querySelectorAll('a')[0]
+    .addEventListener('click', function () {
+      currentPos = 0;
+      showDetails(people[currentPos].name);
+    });
+  divDettagli
+    .get(0)
+    .querySelectorAll('a')[1]
+    .addEventListener('click', function () {
+      if (currentPos > 0) {
+        currentPos--;
+      }
+      showDetails(people[currentPos].name);
+    });
+  divDettagli
+    .get(0)
+    .querySelectorAll('a')[2]
+    .addEventListener('click', function () {
+      if (currentPos < people.length - 1) {
+        currentPos++;
+      }
+      showDetails(people[currentPos].name);
+    });
+  divDettagli
+    .get(0)
+    .querySelectorAll('a')[3]
+    .addEventListener('click', function () {
+      currentPos = people.length - 1;
+      showDetails(people[currentPos].name);
+    });
+
+  // Ritorna l'indice della persona corrente all'interno del vettore people
+  function findIndex(pName) {
+    return people.findIndex(function (p) {
+      return JSON.stringify(p.name) == JSON.stringify(pName);
+    });
   }
 };
