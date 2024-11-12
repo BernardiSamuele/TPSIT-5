@@ -1,0 +1,15 @@
+<h1>Hello, {{ title }}, {{ 1 + 1 }}</h1>
+@if(isLoggedIn) {
+<app-user></app-user>
+} @else {
+<p>Please log in</p>
+}
+
+<h3>Sistemi operativi:</h3>
+@for (item of operatingSystems; track $index) {
+<p>{{ $index + 1 }} - {{ item.name }}</p>
+}
+
+<div [contentEditable]="isEditable">dasdsa</div>
+
+<router-outlet />
