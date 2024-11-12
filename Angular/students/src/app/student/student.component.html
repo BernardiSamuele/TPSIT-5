@@ -1,0 +1,16 @@
+@for(student of studentList; track $index) {
+  <!-- <p [ngStyle]="{backgroundColor: student.gender == 'F' ? 'pink' : 'cyan'}"> -->
+  <!-- <p [ngClass]="{female: student.gender == 'F',
+                 male: student.gender == 'M',
+                 underlined: !student.present
+  }"> -->
+  <p [ngStyle]="getStyle(student)">
+    Lo studente {{ student.name }} da {{ student.city }} è 
+    @if(student.present){
+      <span>presente</span>
+    }
+    @else {
+      <span>assente</span>
+    }
+  </p>  
+}
