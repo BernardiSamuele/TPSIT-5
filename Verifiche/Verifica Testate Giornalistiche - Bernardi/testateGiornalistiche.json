@@ -1,0 +1,596 @@
+{
+  "La Stampa": {
+    "nazione": "Italia",
+    "sede": "Torino",
+    "anno_fondazione": 1867,
+    "direttore": "Mario Calabresi",
+    "immagine": "Mario_Calabresi.jpg",
+    "giornalisti": [
+      {
+        "nome": "Mario Calabresi",
+        "data_di_nascita": "13 febbraio 1964",
+        "area_di_interesse": "Politica",
+        "immagine": "mario_calabresi.jpg"
+      },
+      {
+        "nome": "Luciana Littizzetto",
+        "data_di_nascita": "29 ottobre 1964",
+        "area_di_interesse": "Cultura",
+        "immagine": "luciana_littizzetto.jpg"
+      },
+      {
+        "nome": "Antonella Beccaria",
+        "data_di_nascita": "4 maggio 1975",
+        "area_di_interesse": "Cronaca",
+        "immagine": "antonella_beccaria.jpg"
+      },
+      {
+        "nome": "Massimo Gramellini",
+        "data_di_nascita": "2 gennaio 1960",
+        "area_di_interesse": "Opinione",
+        "immagine": "massimo_gramellini.jpg"
+      }
+    ]
+  },
+  "The New York Times": {
+    "nazione": "Stati Uniti",
+    "sede": "New York City",
+    "anno_fondazione": 1851,
+    "direttore": "A.G. Sulzberger",
+    "immagine": "A.G.Sulzberger.jpg",
+    "giornalisti": [
+      {
+        "nome": "Maggie Haberman",
+        "data_di_nascita": "30 ottobre 1973",
+        "area_di_interesse": "Politica",
+        "immagine": "maggie_haberman.jpg"
+      },
+      {
+        "nome": "Nicholas Kristof",
+        "data_di_nascita": "27 aprile 1959",
+        "area_di_interesse": "Diritti Umani",
+        "immagine": "nicholas_kristof.jpg"
+      },
+      {
+        "nome": "Thomas L. Friedman",
+        "data_di_nascita": "20 luglio 1953",
+        "area_di_interesse": "Economia e Globalizzazione",
+        "immagine": "thomas_friedman.jpg"
+      },
+      {
+        "nome": "Maureen Dowd",
+        "data_di_nascita": "14 gennaio 1952",
+        "area_di_interesse": "Opinione",
+        "immagine": "maureen_dowd.jpg"
+      }
+    ]
+  },
+  "Corriere della Sera": {
+    "nazione": "Italia",
+    "sede": "Milano",
+    "anno_fondazione": 1876,
+    "direttore": "Luciano Fontana",
+    "immagine": "Luciano_Fontana.jpg",
+    "giornalisti": [
+      {
+        "nome": "Beppe Severgnini",
+        "data_di_nascita": "26 luglio 1956",
+        "area_di_interesse": "Politica",
+        "immagine": "beppe_severgnini.jpg"
+      },
+      {
+        "nome": "Stefano Folli",
+        "data_di_nascita": "12 novembre 1951",
+        "area_di_interesse": "Economia",
+        "immagine": "stefano_folli.jpg"
+      },
+      {
+        "nome": "Concita De Gregorio",
+        "data_di_nascita": "4 settembre 1972",
+        "area_di_interesse": "Cultura",
+        "immagine": "concita_de_gregorio.jpg"
+      },
+      {
+        "nome": "Paolo Mieli",
+        "data_di_nascita": "28 luglio 1939",
+        "area_di_interesse": "Storia",
+        "immagine": "paolo_mieli.jpg"
+      }
+    ]
+  },
+  "La Repubblica": {
+    "nazione": "Italia",
+    "sede": "Roma",
+    "anno_fondazione": 1976,
+    "direttore": "Ezio Mauro",
+    "immagine": "Ezio_Mauro.jpg",
+    "giornalisti": [
+      {
+        "nome": "Ezio Mauro",
+        "data_di_nascita": "11 agosto 1948",
+        "area_di_interesse": "Politica",
+        "immagine": "ezio_mauro.jpg"
+      },
+      {
+        "nome": "Barbara Spinelli",
+        "data_di_nascita": "3 giugno 1959",
+        "area_di_interesse": "Editoriale",
+        "immagine": "barbara_spinelli.jpg"
+      },
+      {
+        "nome": "Piero Ostellino",
+        "data_di_nascita": "26 marzo 1940",
+        "area_di_interesse": "Economia",
+        "immagine": "piero_ostellino.jpg"
+      },
+      {
+        "nome": "Natalia Aspesi",
+        "data_di_nascita": "5 marzo 1940",
+        "area_di_interesse": "Cultura",
+        "immagine": "natalia_aspesi.jpg"
+      }
+    ]
+  },
+  "The Guardian": {
+    "nazione": "Regno Unito",
+    "sede": "Londra",
+    "anno_fondazione": 1821,
+    "direttore": "Katharine Viner",
+    "immagine": "Katharine_Viner.jpg",
+    "giornalisti": [
+      {
+        "nome": "Polly Toynbee",
+        "data_di_nascita": "27 dicembre 1946",
+        "area_di_interesse": "Politica",
+        "immagine": "polly_toynbee.jpg"
+      },
+      {
+        "nome": "Jonathan Freedland",
+        "data_di_nascita": "25 febbraio 1967",
+        "area_di_interesse": "Commenti",
+        "immagine": "jonathan_freedland.jpg"
+      },
+      {
+        "nome": "George Monbiot",
+        "data_di_nascita": "27 gennaio 1963",
+        "area_di_interesse": "Ambiente",
+        "immagine": "george_monbiot.jpg"
+      },
+      {
+        "nome": "Owen Jones",
+        "data_di_nascita": "8 agosto 1984",
+        "area_di_interesse": "Politica",
+        "immagine": "owen_jones.jpg"
+      }
+    ]
+  },
+  "Le Monde": {
+    "nazione": "Francia",
+    "sede": "Parigi",
+    "anno_fondazione": 1944,
+    "direttore": "Jérôme Fenoglio",
+    "immagine": "Jérôme_Fenogli.jpg",
+    "giornalisti": [
+      {
+        "nome": "Sylvie Kauffmann",
+        "data_di_nascita": "2 marzo 1952",
+        "area_di_interesse": "Affari esteri",
+        "immagine": "sylvie_kauffmann.jpg"
+      },
+      {
+        "nome": "Alain Frachon",
+        "data_di_nascita": "1 gennaio 1949",
+        "area_di_interesse": "Politica",
+        "immagine": "alain_frachon.jpg"
+      },
+      {
+        "nome": "Gérard Courtois",
+        "data_di_nascita": "7 maggio 1947",
+        "area_di_interesse": "Editoriale",
+        "immagine": "gerard_courtois.jpg"
+      },
+      {
+        "nome": "Audrey Garric",
+        "data_di_nascita": "14 settembre 1984",
+        "area_di_interesse": "Ambiente",
+        "immagine": "audrey_garric.jpg"
+      }
+    ]
+  },
+  "Il Sole 24 Ore": {
+    "nazione": "Italia",
+    "sede": "Milano",
+    "anno_fondazione": 1965,
+    "direttore": "Luciano Fontana",
+    "immagine": "Luciano_Fontana.jpg",
+    "giornalisti": [
+      {
+        "nome": "Luciano Fontana",
+        "data_di_nascita": "15 settembre 1960",
+        "area_di_interesse": "Economia",
+        "immagine": "luciano_fontana.jpg"
+      },
+      {
+        "nome": "Maria Latella",
+        "data_di_nascita": "10 ottobre 1960",
+        "area_di_interesse": "Economia",
+        "immagine": "maria_latella.jpg"
+      },
+      {
+        "nome": "Andrea Cabrini",
+        "data_di_nascita": "5 marzo 1969",
+        "area_di_interesse": "Economia",
+        "immagine": "andrea_cabrini.jpg"
+      },
+      {
+        "nome": "Paolo Cereda",
+        "data_di_nascita": "28 gennaio 1958",
+        "area_di_interesse": "Economia",
+        "immagine": "paolo_cereda.jpg"
+      }
+    ]
+  },
+  "Il Messaggero": {
+    "nazione": "Italia",
+    "sede": "Roma",
+    "anno_fondazione": 1878,
+    "direttore": "Franco Bechis",
+    "immagine": "Franco_Bechis.jpg",
+    "giornalisti": [
+      {
+        "nome": "Franco Bechis",
+        "data_di_nascita": "28 marzo 1962",
+        "area_di_interesse": "Politica",
+        "immagine": "franco_bechis.jpg"
+      },
+      {
+        "nome": "Roberto Napoletano",
+        "data_di_nascita": "7 agosto 1957",
+        "area_di_interesse": "Economia",
+        "immagine": "roberto_napoletano.jpg"
+      },
+      {
+        "nome": "Maria Grazia Mazzola",
+        "data_di_nascita": "19 dicembre 1965",
+        "area_di_interesse": "Cultura",
+        "immagine": "maria_grazia_mazzola.jpg"
+      },
+      {
+        "nome": "Luigi Guatri",
+        "data_di_nascita": "11 gennaio 1964",
+        "area_di_interesse": "Cronaca",
+        "immagine": "luigi_guatri.jpg"
+      }
+    ]
+  },
+  "BBC News": {
+    "nazione": "Regno Unito",
+    "sede": "Londra",
+    "anno_fondazione": 1922,
+    "direttore": "Lisa Davies",
+    "immagine": "Lisa_Davies.jpg",
+    "giornalisti": [
+      {
+        "nome": "Laura Kuenssberg",
+        "data_di_nascita": "8 agosto 1976",
+        "area_di_interesse": "Politica",
+        "immagine": "laura_kuenssberg.jpg"
+      },
+      {
+        "nome": "Huw Edwards",
+        "data_di_nascita": "18 agosto 1961",
+        "area_di_interesse": "Notizie generali",
+        "immagine": "huw_edwards.jpg"
+      },
+      {
+        "nome": "Sarah Montague",
+        "data_di_nascita": "8 febbraio 1966",
+        "area_di_interesse": "Politica",
+        "immagine": "sarah_montague.jpg"
+      },
+      {
+        "nome": "Jeremy Bowen",
+        "data_di_nascita": "6 febbraio 1960",
+        "area_di_interesse": "Corrispondenza estera",
+        "immagine": "jeremy_bowen.jpg"
+      }
+    ]
+  },
+  "CNN": {
+    "nazione": "Stati Uniti",
+    "sede": "Atlanta",
+    "anno_fondazione": 1980,
+    "direttore": "John Witherow",
+    "immagine": "John_Witherow.jpg",
+    "giornalisti": [
+      {
+        "nome": "Anderson Cooper",
+        "data_di_nascita": "3 giugno 1967",
+        "area_di_interesse": "Notizie generali",
+        "immagine": "anderson_cooper.jpg"
+      },
+      {
+        "nome": "Christian Amanpour",
+        "data_di_nascita": "12 gennaio 1958",
+        "area_di_interesse": "Affari esteri",
+        "immagine": "christian_amanpour.jpg"
+      },
+      {
+        "nome": "Wolf Blitzer",
+        "data_di_nascita": "22 marzo 1948",
+        "area_di_interesse": "Politica",
+        "immagine": "wolf_blitzer.jpg"
+      },
+      {
+        "nome": "Don Lemon",
+        "data_di_nascita": "1 marzo 1966",
+        "area_di_interesse": "Notizie generali",
+        "immagine": "don_lemon.jpg"
+      }
+    ]
+  },
+  "Al Jazeera": {
+    "nazione": "Qatar",
+    "sede": "Doha",
+    "anno_fondazione": 1996,
+    "direttore": "Mostefa Souag",
+    "immagine": "Mostefa_Souag.jpg",
+    "giornalisti": [
+      {
+        "nome": "Mehdi Hasan",
+        "data_di_nascita": "17 luglio 1979",
+        "area_di_interesse": "Politica",
+        "immagine": "mehdi_hasan.jpg"
+      },
+      {
+        "nome": "Riz Khan",
+        "data_di_nascita": "20 agosto 1956",
+        "area_di_interesse": "Notizie internazionali",
+        "immagine": "riz_khan.jpg"
+      },
+      {
+        "nome": "Ghida Fakhry",
+        "data_di_nascita": "8 febbraio 1966",
+        "area_di_interesse": "Notizie internazionali",
+        "immagine": "ghida_fakhry.jpg"
+      },
+      {
+        "nome": "Jamal Elshayyal",
+        "data_di_nascita": "23 dicembre 1980",
+        "area_di_interesse": "Notizie internazionali",
+        "immagine": "jamal_elshayyal.jpg"
+      }
+    ]
+  },
+  "Il Fatto Quotidiano": {
+    "nazione": "Italia",
+    "sede": "Roma",
+    "anno_fondazione": 2009,
+    "direttore": "Marco Travaglio",
+    "immagine": "Marco_Travaglio.jpg",
+    "giornalisti": [
+      {
+        "nome": "Marco Travaglio",
+        "data_di_nascita": "13 novembre 1964",
+        "area_di_interesse": "Politica",
+        "immagine": "marco_travaglio.jpg"
+      },
+      {
+        "nome": "Barbara Spinelli",
+        "data_di_nascita": "3 giugno 1959",
+        "area_di_interesse": "Editoriale",
+        "immagine": "barbara_spinelli.jpg"
+      },
+      {
+        "nome": "Giacomo Papi",
+        "data_di_nascita": "21 settembre 1980",
+        "area_di_interesse": "Cronaca",
+        "immagine": "giacomo_papi.jpg"
+      },
+      {
+        "nome": "Silvia Truzzi",
+        "data_di_nascita": "17 aprile 1971",
+        "area_di_interesse": "Politica",
+        "immagine": "silvia_truzzi.jpg"
+      }
+    ]
+  },
+  "El País": {
+    "nazione": "Spagna",
+    "sede": "Madrid",
+    "anno_fondazione": 1976,
+    "direttore": "Javier Moreno",
+    "immagine": "Javier_Moreno.jpg",
+    "giornalisti": [
+      {
+        "nome": "Javier Marías",
+        "data_di_nascita": "20 settembre 1951",
+        "area_di_interesse": "Opinione",
+        "immagine": "javier_marias.jpg"
+      },
+      {
+        "nome": "Isabel Allende",
+        "data_di_nascita": "2 agosto 1942",
+        "area_di_interesse": "Cultura",
+        "immagine": "isabel_allende.jpg"
+      },
+      {
+        "nome": "Ana Pastor",
+        "data_di_nascita": "9 marzo 1977",
+        "area_di_interesse": "Politica",
+        "immagine": "ana_pastor.jpg"
+      },
+      {
+        "nome": "Enrique Meneses",
+        "data_di_nascita": "21 settembre 1929",
+        "area_di_interesse": "Fotogiornalismo",
+        "immagine": "enrique_meneses.jpg"
+      }
+    ]
+  },
+  "Avvenire": {
+    "nazione": "Italia",
+    "sede": "Milano",
+    "anno_fondazione": 1968,
+    "direttore": "Marco Tarquinio",
+    "immagine": "Marco_Tarquinio.jpg",
+    "giornalisti": [
+      {
+        "nome": "Marco Tarquinio",
+        "data_di_nascita": "20 gennaio 1967",
+        "area_di_interesse": "Religione",
+        "immagine": "marco_tarquinio.jpg"
+      },
+      {
+        "nome": "Lorenzo Fazzini",
+        "data_di_nascita": "9 maggio 1978",
+        "area_di_interesse": "Cultura",
+        "immagine": "lorenzo_fazzini.jpg"
+      },
+      {
+        "nome": "Roberto Bernabò",
+        "data_di_nascita": "5 dicembre 1965",
+        "area_di_interesse": "Politica",
+        "immagine": "roberto_bernabo.jpg"
+      },
+      {
+        "nome": "Maria Teresa Meli",
+        "data_di_nascita": "14 luglio 1983",
+        "area_di_interesse": "Religione",
+        "immagine": "maria_teresa_meli.jpg"
+      }
+    ]
+  },
+  "Il Giornale": {
+    "nazione": "Italia",
+    "sede": "Milano",
+    "anno_fondazione": 1974,
+    "direttore": "Alessandro Sallusti",
+    "immagine": "Alessandro_Sallusti.jpg",
+    "giornalisti": [
+      {
+        "nome": "Alessandro Sallusti",
+        "data_di_nascita": "2 febbraio 1958",
+        "area_di_interesse": "Politica",
+        "immagine": "alessandro_sallusti.jpg"
+      },
+      {
+        "nome": "Lorenzo Lamperti",
+        "data_di_nascita": "14 settembre 1970",
+        "area_di_interesse": "Economia",
+        "immagine": "lorenzo_lamperti.jpg"
+      },
+      {
+        "nome": "Laura Bononcini",
+        "data_di_nascita": "25 aprile 1965",
+        "area_di_interesse": "Cultura",
+        "immagine": "laura_bononcini.jpg"
+      },
+      {
+        "nome": "Giovanni G. Casanova",
+        "data_di_nascita": "7 marzo 1981",
+        "area_di_interesse": "Politica",
+        "immagine": "giovanni_casanova.jpg"
+      }
+    ]
+  },
+  "Der Spiegel": {
+    "nazione": "Germania",
+    "sede": "Amburgo",
+    "anno_fondazione": 1947,
+    "direttore": "Steffen Klusmann",
+    "immagine": "Steffen_Klusmann.jpg",
+    "giornalisti": [
+      {
+        "nome": "Kai Diekmann",
+        "data_di_nascita": "27 dicembre 1964",
+        "area_di_interesse": "Editoriale",
+        "immagine": "kai_diekmann.jpg"
+      },
+      {
+        "nome": "Melissa Eddy",
+        "data_di_nascita": "26 luglio 1964",
+        "area_di_interesse": "Notizie internazionali",
+        "immagine": "melissa_eddy.jpg"
+      },
+      {
+        "nome": "Christiane Hoffmann",
+        "data_di_nascita": "24 settembre 1968",
+        "area_di_interesse": "Politica",
+        "immagine": "christiane_hoffmann.jpg"
+      },
+      {
+        "nome": "Clemens Höges",
+        "data_di_nascita": "16 maggio 1969",
+        "area_di_interesse": "Cultura",
+        "immagine": "clemens_hoges.jpg"
+      }
+    ]
+  },
+  "La Gazzetta dello Sport": {
+    "nazione": "Italia",
+    "sede": "Milano",
+    "anno_fondazione": 1896,
+    "direttore": "Andrea Monti",
+    "immagine": "Andrea_Monti.jpg",
+    "giornalisti": [
+      {
+        "nome": "Andrea Monti",
+        "data_di_nascita": "5 maggio 1971",
+        "area_di_interesse": "Sport",
+        "immagine": "andrea_monti.jpg"
+      },
+      {
+        "nome": "Luca Bianchin",
+        "data_di_nascita": "12 dicembre 1969",
+        "area_di_interesse": "Sport",
+        "immagine": "luca_bianchin.jpg"
+      },
+      {
+        "nome": "Paola Rado",
+        "data_di_nascita": "30 settembre 1976",
+        "area_di_interesse": "Sport",
+        "immagine": "paola_rado.jpg"
+      },
+      {
+        "nome": "Roberto Beccantini",
+        "data_di_nascita": "18 gennaio 1975",
+        "area_di_interesse": "Sport",
+        "immagine": "roberto_beccantini.jpg"
+      }
+    ]
+  },
+  "Il Mattino": {
+    "nazione": "Italia",
+    "sede": "Napoli",
+    "anno_fondazione": 1892,
+    "direttore": "Francesco Gaetano Cimmino",
+    "immagine": "Francesco_Gaetano_Cimmino.jpg",
+    "giornalisti": [
+      {
+        "nome": "Francesco Gaetano Cimmino",
+        "data_di_nascita": "21 dicembre 1962",
+        "area_di_interesse": "Politica",
+        "immagine": "francesco_cimmino.jpg"
+      },
+      {
+        "nome": "Laura D'Aprile",
+        "data_di_nascita": "9 marzo 1973",
+        "area_di_interesse": "Cronaca",
+        "immagine": "laura_daprile.jpg"
+      },
+      {
+        "nome": "Antonio Polito",
+        "data_di_nascita": "3 agosto 1960",
+        "area_di_interesse": "Economia",
+        "immagine": "antonio_polito.jpg"
+      },
+      {
+        "nome": "Marta Ottaviano",
+        "data_di_nascita": "18 settembre 1976",
+        "area_di_interesse": "Cultura",
+        "immagine": "marta_ottaviano.jpg"
+      }
+    ]
+  }
+}
