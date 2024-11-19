@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-student',
@@ -10,6 +10,7 @@ import { Component, Input } from '@angular/core';
 })
 export class StudentComponent {
   @Input() student: any;
+  @Output() deleteStudentEvent = new EventEmitter<any>();
 
   ngOnInit() {
     let num = this.generaNumero(1, 3);
@@ -22,5 +23,9 @@ export class StudentComponent {
 
   onStudentClick() {
     this.student.present = !this.student.present;
+  }
+
+  onDeleteStudentClick() {
+    this.deleteStudentEvent.emit(this.student);
   }
 }

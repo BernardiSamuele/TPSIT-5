@@ -9,3 +9,28 @@
   text-align: center;
   border: 1px solid #ccc;
 }
+
+.studentField {
+  margin: 20px;
+}
+
+.item {
+  margin: 10px;
+}
+
+.add,
+.delete {
+  background-color: #1976d2;
+  padding: 10px;
+  border-radius: 6px;
+  color: whitesmoke;
+  cursor: pointer;
+}
+
+.delete {
+  margin-left: 10px;
+}
+
+.add:disabled {
+  background-color: darkslategrey;
+}

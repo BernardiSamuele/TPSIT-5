@@ -1,27 +1,42 @@
 <div class="wrapper">
   <h2>Student List</h2>
   <div class="studentForm">
-    <div>
+    <div class="studentField">
       <label for="txtName">Name: </label>
-      <input type="text" id="txtName" #txtName />
+      <input [(ngModel)]="studentName" type="text" id="txtName" #txtName />
     </div>
-    <div>
-      <input type="radio" name="gender" value="M" /> Male
-      <input type="radio" name="gender" value="F" /> Female
+    <div class="studentField">
+      <input [(ngModel)]="studentGender" type="radio" name="gender" value="M" />
+      Male
+      <input [(ngModel)]="studentGender" type="radio" name="gender" value="F" />
+      Female
     </div>
-    <div>
+    <div class="studentField">
       <label for="lstCity">City: </label>
-      <select id="lstCity">
+      <select [(ngModel)]="studentCity" id="lstCity">
         @for (item of cities; track $index) {
-        <option value="item">{{ item }}</option>
+        <option>{{ item }}</option>
         }
       </select>
+    </div>
+    <div class="studentField">
+      <button
+        [disabled]="studentName?.length < 2"
+        (click)="onCreateStudent()"
+        class="add"
+      >
+        Add
+      </button>
     </div>
   </div>
   @for (item of studentList; track $index) {
   <div class="item">
     <span>{{ $index + 1 }}</span>
-    <app-student [student]="item"></app-student>
+    <app-student
+      (deleteStudentEvent)="onDeleteStudent($event)"
+      [student]="item"
+    ></app-student>
+    <!-- <button (click)="onDeleteStudent($index)" class="delete">Delete</button> -->
   </div>
   }
 </div>

@@ -7,9 +7,13 @@
   }"
   class="student"
 >
-  Lo studente {{ student.name }} da {{ student.city }} è @if(student.present){
-  <span>presente</span>
-  } @else {
-  <span>assente</span>
-  }
+  <span
+    >Lo studente {{ student.name }} da {{ student.city }} è
+    @if(student.present){
+    <span>presente</span>
+    } @else {
+    <span>assente</span>
+    }</span
+  >
+  <button (click)="onDeleteStudentClick()" class="delete">Delete</button>
 </p>
