@@ -1,0 +1,15 @@
+<p
+  (click)="onStudentClick()"
+  [ngClass]="{
+    female: student.gender == 'F',
+    male: student.gender == 'M',
+    underlined: !student.present
+  }"
+  class="student"
+>
+  Lo studente {{ student.name }} da {{ student.city }} è @if(student.present){
+  <span>presente</span>
+  } @else {
+  <span>assente</span>
+  }
+</p>

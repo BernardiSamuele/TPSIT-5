@@ -1,0 +1,11 @@
+.item {
+  margin: 10px;
+}
+
+.wrapper {
+  width: 600px;
+  margin: 0 auto;
+  margin-top: 25px;
+  text-align: center;
+  border: 1px solid #ccc;
+}
