@@ -1,12 +1,18 @@
 'use strict';
 
 import http from 'http';
-import url from 'url';
 import fs from 'fs';
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
+import { MongoClient } from 'mongodb';
+import dotenv from 'dotenv';
+
+/* ********************** Mongo config ********************** */
+dotenv.config({ path: '.env' });
+const dbName = 'unicorns';
+const connectionString = process.env.connectionStringAtlas!;
 
 /* ********************** HTTP server ********************** */
-const port = 1337;
+const port = 3000;
 let paginaErrore: string;
 const app = express();
 const server = http.createServer(app);
@@ -34,8 +40,8 @@ app.use('/', (req: any, res: any, next: any) => {
 app.use('/', express.static('./static'));
 
 // 3. Body params
-app.use('/', express.json({ limit: '50mb' }));
-app.use('/', express.urlencoded({ limit: '50mb', extended: true }));
+app.use('/', express.json({ limit: '50mb' })); // Parsifica i parametri in formato json
+app.use('/', express.urlencoded({ limit: '50mb', extended: true })); // Parsifica i parametri urlencoded
 
 // 4. Params log
 app.use('/', (req, res, next) => {
@@ -47,4 +53,89 @@ app.use('/', (req, res, next) => {
   }
   next();
 });
+
 /* ********************** Client routes ********************** */
+app.get('/api/risorsa1', async (req: Request, res: Response, next: NextFunction) => {
+  const unicornName = req.query.nome;
+  if (!unicornName) {
+    const msg = 'Bad request. Missing parameter: nome';
+    res.status(400);
+    res.send(msg);
+  } else {
+    const client = new MongoClient(connectionString);
+    await client.connect();
+    const collection = client.db(dbName).collection('unicorns');
+    const request = collection.findOne({ name: unicornName });
+    request.catch((err) => {
+      res.status(500).send(`Errore esecuzione query: ${err}`);
+    });
+    request.then((data) => {
+      res.send(data);
+    });
+    request.finally(() => {
+      client.close();
+    });
+  }
+});
+
+app.patch('/api/risorsa2', async (req: Request, res: Response, next: NextFunction) => {
+  const unicornName = req.body.nome;
+  const nVampiri = req.body.nVampiri;
+  if (!unicornName) {
+    const msg = 'Bad request. Missing parameter: nome';
+    res.status(400);
+    res.send(msg);
+  } else {
+    const client = new MongoClient(connectionString);
+    await client.connect();
+    const collection = client.db(dbName).collection('unicorns');
+    const filter = { name: unicornName };
+    const action = { $inc: { vampires: nVampiri } };
+    const request = collection.updateOne(filter, action);
+    request.catch((err) => {
+      res.status(500).send(`Errore esecuzione query: ${err}`);
+    });
+    request.then((data) => {
+      res.send(data);
+    });
+    request.finally(() => {
+      client.close();
+    });
+  }
+});
+
+app.get('/api/risorsa3/:gender/:hair', async (req: Request, res: Response) => {
+  const gender = req.params.gender;
+  const hair = req.params.hair;
+
+  const client = new MongoClient(connectionString);
+  await client.connect();
+  const collection = client.db(dbName).collection('unicorns');
+  const filter = { gender, hair };
+  const project = { name: 1, hair: 1 };
+  const request = collection.find(filter).project(project).toArray();
+  request.catch((err) => {
+    res.status(500).send(`Errore esecuzione query: ${err}`);
+  });
+  request.then((data) => {
+    res.send(data);
+  });
+  request.finally(() => {
+    client.close();
+  });
+});
+
+/* ********************** Default Route & Error Handler ********************** */
+app.use('/', (req: Request, res: Response, next: NextFunction) => {
+  res.status(404);
+  if (!req.originalUrl.startsWith('/api/')) {
+    res.send(paginaErrore);
+  } else {
+    res.send(`Resource not found: ${req.originalUrl}`);
+  }
+});
+
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  console.log(err.stack);
+  res.status(500).send(err.message);
+});
