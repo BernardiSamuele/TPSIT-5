@@ -1,0 +1,12 @@
+<div class="container">
+  <h1 class="header">Events</h1>
+  <div class="form">
+    <label>Event: <input type="text" [(ngModel)]="this.newEventName" /></label>
+    <button (click)="addEvent()" id="buttonConfirm">Add</button>
+  </div>
+  <div class="display">
+    @for (item of events; track $index) {
+    <app-event class="item" [event]="item"></app-event>
+    }
+  </div>
+</div>
