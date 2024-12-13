@@ -70,24 +70,28 @@ $(document).ready(function () {
     }
   }
 
-  async function updateRecord(_id) {
+  async function putRecord(_id) {
     divDettagli.empty();
-    const textarea = $('<textarea>').appendTo(divDettagli).prop('placeholder', '{"Name": "[the name to update]"}');
+    const textarea = $('<textarea>').appendTo(divDettagli).prop('placeholder', '{"$inc": {"vampires": 2}}');
     $('<button>')
       .addClass('btn btn-success btn-sm')
-      .text('Insert')
+      .text('Update')
       .appendTo(divDettagli)
       .on('click', async function () {
         if (textarea.val()) {
+          let json;
           try {
-            const data = await inviaRichiesta('PATCH', `/api/vampires/${_id}`, { values: JSON.parse(textarea.val()) });
-            if (data?.modifiedCount === 1) {
-              alert('Record updated successfully!');
-            } else {
-              alert('Unable to update the record!');
-            }
+            json = JSON.parse(textarea.val());
           } catch (err) {
             alert('Error! Invalid JSON');
+            return;
+          }
+          const data = await inviaRichiesta('PUT', `/api/${currentCollection}/${_id}`, { action: json });
+          if (data?.modifiedCount == 1) {
+            alert('Record updated successfully!');
+            getDataCollection();
+          } else {
+            alert('Unable to update the record!');
           }
         }
       });
@@ -125,9 +129,13 @@ $(document).ready(function () {
         $('<div>')
           .appendTo(td)
           .on('click', () => {
-            updateRecord(element._id);
+            getDetails(element._id, 'PATCH');
           });
-        $('<div>').appendTo(td);
+        $('<div>')
+          .appendTo(td)
+          .on('click', () => {
+            putRecord(element._id);
+          });
         $('<div>')
           .appendTo(td)
           .on('click', () => {
@@ -158,16 +166,47 @@ $(document).ready(function () {
     }
     getDataCollection(filters);
   });
-  async function getDetails(id) {
+  async function getDetails(id, method = 'GET') {
     console.log(id);
     let data = await inviaRichiesta('GET', '/api/' + currentCollection + '/' + id);
     if (data) {
       console.log(data);
       divDettagli.empty();
-      for (let key in data) {
-        $('<strong>').appendTo(divDettagli).text(key);
-        $('<span>').appendTo(divDettagli).text(JSON.stringify(data[key]));
-        $('<br>').appendTo(divDettagli);
+      if (method == 'GET') {
+        for (let key in data) {
+          $('<strong>').appendTo(divDettagli).text(key);
+          $('<span>').appendTo(divDettagli).text(JSON.stringify(data[key]));
+          $('<br>').appendTo(divDettagli);
+        }
+      } else {
+        delete data._id;
+        const textarea = $('<textarea>').appendTo(divDettagli).val(JSON.stringify(data, null, 2));
+        textarea.css('height', `${textarea.get(0).scrollHeight}px`);
+        $('<button>')
+          .addClass('btn btn-success btn-sm')
+          .text('Update')
+          .appendTo(divDettagli)
+          .on('click', async function () {
+            if (textarea.val()) {
+              let json;
+              try {
+                json = JSON.parse(textarea.val());
+              } catch (err) {
+                alert('Error! Invalid JSON');
+                return;
+              }
+              if ('_id' in json) {
+                delete json._id;
+              }
+              const data = await inviaRichiesta('PATCH', `/api/${currentCollection}/${id}`, { action: json });
+              if (data?.modifiedCount == 1) {
+                alert('Record updated successfully!');
+                getDataCollection();
+              } else {
+                alert('Unable to update the record!');
+              }
+            }
+          });
       }
     }
   }

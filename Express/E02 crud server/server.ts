@@ -152,16 +152,37 @@ app.delete('/api/:collection/:id', async (req: Request, res: Response) => {
     });
 });
 
-app.patch('/api/:collection/:id', async (req: Request, res: Response) => {
+app.put('/api/:collection/:id', async (req: Request, res: Response) => {
   const { id: _id, collection: collectionName } = req.params;
-  const { values } = req.body;
+  const { action } = req.body;
 
   const client = new MongoClient(connectionString);
   await client.connect();
   const collection = client.db(dbName).collection(collectionName);
 
   collection
-    .updateOne({ _id: new ObjectId(_id) }, { $set: values })
+    .updateOne({ _id: new ObjectId(_id) }, action)
+    .catch((err) => {
+      res.status(500).send('Error in query execution: ' + err);
+    })
+    .then((data) => {
+      res.send(data);
+    })
+    .finally(() => {
+      client.close();
+    });
+});
+
+app.patch('/api/:collection/:id', async (req: Request, res: Response) => {
+  const { id: _id, collection: collectionName } = req.params;
+  const { action } = req.body;
+
+  const client = new MongoClient(connectionString);
+  await client.connect();
+  const collection = client.db(dbName).collection(collectionName);
+
+  collection
+    .updateOne({ _id: new ObjectId(_id) }, { $set: action })
     .catch((err) => {
       res.status(500).send('Error in query execution: ' + err);
     })
