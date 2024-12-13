@@ -1,0 +1,16 @@
+<table class="table">
+  <thead class="thead-dark">
+    <tr class="table-success">
+      <th scope="col">Author</th>
+      <th scope="col">Title</th>
+      <th scope="col">Country</th>
+      <th scope="col">Year</th>
+      <th scope="col">Pages</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for(item of this.bookList; track $index) {
+    <app-book [book]="item"></app-book>
+    }
+  </tbody>
+</table>
