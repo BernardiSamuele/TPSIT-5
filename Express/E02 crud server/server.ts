@@ -3,7 +3,7 @@
 import http from 'http';
 import fs from 'fs';
 import express, { NextFunction, Request, Response } from 'express';
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 import dotenv from 'dotenv';
 
 /* ********************** Mongo config ********************** */
@@ -88,6 +88,90 @@ app.get('/api/:collection', async (req: Request, res: Response, next: NextFuncti
   });
 });
 
+app.get('/api/:collection/:id', async (req: Request, res: Response, next: NextFunction) => {
+  let { id } = req.params;
+  let _id = new ObjectId(id);
+
+  let collectionName = req.params.collection;
+  const client = new MongoClient(connectionString);
+  await client.connect();
+  let collection = client.db(dbName).collection(collectionName);
+
+  collection
+    .findOne({ _id })
+    .catch((err) => {
+      res.status(500).send('Error in query execution: ' + err);
+    })
+    .then((data) => {
+      res.send(data);
+    })
+    .finally(() => {
+      client.close();
+    });
+});
+
+app.post('/api/:collection/', async (req: Request, res: Response) => {
+  const newRecord = req.body;
+
+  let collectionName = req.params.collection;
+  const client = new MongoClient(connectionString);
+  await client.connect();
+  let collection = client.db(dbName).collection(collectionName);
+
+  collection
+    .insertOne(newRecord)
+    .catch((err) => {
+      res.status(500).send('Error in query execution: ' + err);
+    })
+    .then((data) => {
+      res.send(data);
+    })
+    .finally(() => {
+      client.close();
+    });
+});
+
+app.delete('/api/:collection/:id', async (req: Request, res: Response) => {
+  const { id: _id, collection: collectionName } = req.params;
+  let objectId = new ObjectId(_id);
+
+  const client = new MongoClient(connectionString);
+  await client.connect();
+  const collection = client.db(dbName).collection(collectionName);
+
+  collection
+    .deleteOne({ _id: objectId })
+    .catch((err) => {
+      res.status(500).send('Error in query execution: ' + err);
+    })
+    .then((data) => {
+      res.send(data);
+    })
+    .finally(() => {
+      client.close();
+    });
+});
+
+app.patch('/api/:collection/:id', async (req: Request, res: Response) => {
+  const { id: _id, collection: collectionName } = req.params;
+  const { values } = req.body;
+
+  const client = new MongoClient(connectionString);
+  await client.connect();
+  const collection = client.db(dbName).collection(collectionName);
+
+  collection
+    .updateOne({ _id: new ObjectId(_id) }, { $set: values })
+    .catch((err) => {
+      res.status(500).send('Error in query execution: ' + err);
+    })
+    .then((data) => {
+      res.send(data);
+    })
+    .finally(() => {
+      client.close();
+    });
+});
 /* ********************** Default Route & Error Handler ********************** */
 app.use('/', (req: Request, res: Response, next: NextFunction) => {
   res.status(404);
