@@ -15,7 +15,7 @@ $(document).ready(function () {
   getCollections();
 
   async function getCollections() {
-    const data = await inviaRichiesta('GET', '/api/getCollections');
+    const data = await inviaRichiesta('GET', '/api/collections');
     if (data) {
       console.log(data);
       const label = divCollections.children('label');
@@ -99,7 +99,7 @@ $(document).ready(function () {
 
   async function getDataCollection(filter = {}) {
     divDettagli.empty();
-    const data = await inviaRichiesta('GET', '/api/' + currentCollection, filter);
+    const data = await inviaRichiesta('GET', '/api/' + currentCollection, { filter });
     if (data) {
       console.log(data);
 

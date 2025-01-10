@@ -5,6 +5,7 @@ import fs from 'fs';
 import express, { NextFunction, Request, Response } from 'express';
 import { MongoClient, ObjectId } from 'mongodb';
 import dotenv from 'dotenv';
+import cors, { CorsOptions } from 'cors';
 
 /* ********************** Mongo config ********************** */
 dotenv.config({ path: '.env' });
@@ -12,7 +13,7 @@ const dbName = process.env.dbName;
 const connectionString = process.env.connectionStringAtlas!;
 
 /* ********************** HTTP server ********************** */
-const port = 3000;
+const port = process.env.port;
 let paginaErrore: string;
 const app = express();
 const server = http.createServer(app);
@@ -25,13 +26,13 @@ function init() {
     if (!err) {
       paginaErrore = data.toString();
     } else {
-      paginaErrore = '<h1>Risorsa non trovata</h1>';
+      paginaErrore = '<h1>Resource not found</h1>';
     }
   });
 }
 /* ********************** Middleware ********************** */
 // 1. Request log
-app.use('/', (req: any, res: any, next: any) => {
+app.use('/', (req: Request, res: Response, next: NextFunction) => {
   console.log(req.method + ': ' + req.originalUrl);
   next();
 });
@@ -46,19 +47,42 @@ app.use('/', express.urlencoded({ limit: '50mb', extended: true })); // Parsific
 // 4. Params log
 app.use('/', (req, res, next) => {
   if (Object.keys(req.query).length > 0) {
-    console.log('--> Parametri GET: ' + JSON.stringify(req.query));
+    console.log('--> GET params: ' + JSON.stringify(req.query));
   }
   if (Object.keys(req.body).length > 0) {
-    console.log('--> Parametri BODY: ' + JSON.stringify(req.body));
+    console.log('--> BODY params: ' + JSON.stringify(req.body));
   }
   next();
 });
 
+// 5. CORS
+const whitelist = [
+  'http://my-crud-server.herokuapp.com ', // porta 80 (default)
+  'https://my-crud-server.herokuapp.com ', // porta 443 (default)
+  'http://localhost:3000',
+  'https://localhost:3001',
+  'http://localhost:4200', // server angular
+  'https://cordovaapp' // porta 443 (default)
+];
+const corsOptions: CorsOptions = {
+  origin: function (origin, callback) {
+    if (!origin)
+      // browser direct call
+      return callback(null, true);
+    if (whitelist.indexOf(origin) === -1) {
+      var msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    } else return callback(null, true);
+  },
+  credentials: true
+};
+app.use('/', cors(corsOptions));
 /* ********************** Client routes ********************** */
-app.get('/api/getCollections', async (req: Request, res: Response, next: NextFunction) => {
+app.get('/api/collections', async (req: Request, res: Response) => {
   const client = new MongoClient(connectionString);
   await client.connect();
   const db = client.db(dbName);
+
   const request = db.listCollections().toArray();
   request.then((data) => {
     res.send(data);
@@ -71,12 +95,15 @@ app.get('/api/getCollections', async (req: Request, res: Response, next: NextFun
   });
 });
 
-app.get('/api/:collection', async (req: Request, res: Response, next: NextFunction) => {
-  const collectionName = req.params.collection;
+app.get('/api/:collection', async (req: Request, res: Response) => {
+  const { collection: collectionName } = req.params;
+  const { filter } = req.query as { filter: string };
+
   const client = new MongoClient(connectionString);
   await client.connect();
   const collection = client.db(dbName).collection(collectionName);
-  const request = collection.find({}).toArray();
+
+  const request = collection.find(JSON.parse(filter) ?? {}).toArray();
   request.catch((err) => {
     res.status(500).send(`Errore esecuzione query: ${err}`);
   });
@@ -88,19 +115,19 @@ app.get('/api/:collection', async (req: Request, res: Response, next: NextFuncti
   });
 });
 
-app.get('/api/:collection/:id', async (req: Request, res: Response, next: NextFunction) => {
-  let { id } = req.params;
-  let _id = new ObjectId(id);
+app.get('/api/:collection/:id', async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const _id: any = ObjectId.isValid(id) ? new ObjectId(id) : id;
+  const { collection: collectionName } = req.params;
 
-  let collectionName = req.params.collection;
   const client = new MongoClient(connectionString);
   await client.connect();
-  let collection = client.db(dbName).collection(collectionName);
+  const collection = client.db(dbName).collection(collectionName);
 
   collection
     .findOne({ _id })
     .catch((err) => {
-      res.status(500).send('Error in query execution: ' + err);
+      res.status(500).send(`Error in query execution: ${err}`);
     })
     .then((data) => {
       res.send(data);
@@ -113,15 +140,15 @@ app.get('/api/:collection/:id', async (req: Request, res: Response, next: NextFu
 app.post('/api/:collection/', async (req: Request, res: Response) => {
   const newRecord = req.body;
 
-  let collectionName = req.params.collection;
+  const collectionName = req.params.collection;
   const client = new MongoClient(connectionString);
   await client.connect();
-  let collection = client.db(dbName).collection(collectionName);
+  const collection = client.db(dbName).collection(collectionName);
 
   collection
     .insertOne(newRecord)
     .catch((err) => {
-      res.status(500).send('Error in query execution: ' + err);
+      res.status(500).send(`Error in query execution: ${err}`);
     })
     .then((data) => {
       res.send(data);
@@ -132,17 +159,17 @@ app.post('/api/:collection/', async (req: Request, res: Response) => {
 });
 
 app.delete('/api/:collection/:id', async (req: Request, res: Response) => {
-  const { id: _id, collection: collectionName } = req.params;
-  let objectId = new ObjectId(_id);
+  const { id, collection: collectionName } = req.params;
+  const _id: any = ObjectId.isValid(id) ? new ObjectId(id) : id;
 
   const client = new MongoClient(connectionString);
   await client.connect();
   const collection = client.db(dbName).collection(collectionName);
 
   collection
-    .deleteOne({ _id: objectId })
+    .deleteOne({ _id })
     .catch((err) => {
-      res.status(500).send('Error in query execution: ' + err);
+      res.status(500).send(`Error in query execution: ${err}`);
     })
     .then((data) => {
       res.send(data);
@@ -153,7 +180,8 @@ app.delete('/api/:collection/:id', async (req: Request, res: Response) => {
 });
 
 app.put('/api/:collection/:id', async (req: Request, res: Response) => {
-  const { id: _id, collection: collectionName } = req.params;
+  const { id, collection: collectionName } = req.params;
+  const _id: any = ObjectId.isValid(id) ? new ObjectId(id) : id;
   const { action } = req.body;
 
   const client = new MongoClient(connectionString);
@@ -161,7 +189,7 @@ app.put('/api/:collection/:id', async (req: Request, res: Response) => {
   const collection = client.db(dbName).collection(collectionName);
 
   collection
-    .updateOne({ _id: new ObjectId(_id) }, action)
+    .updateOne({ _id: _id }, action)
     .catch((err) => {
       res.status(500).send('Error in query execution: ' + err);
     })
@@ -174,15 +202,16 @@ app.put('/api/:collection/:id', async (req: Request, res: Response) => {
 });
 
 app.patch('/api/:collection/:id', async (req: Request, res: Response) => {
-  const { id: _id, collection: collectionName } = req.params;
+  const { id, collection: collectionName } = req.params;
   const { action } = req.body;
+  const _id: any = ObjectId.isValid(id) ? new ObjectId(id) : id;
 
   const client = new MongoClient(connectionString);
   await client.connect();
   const collection = client.db(dbName).collection(collectionName);
 
   collection
-    .updateOne({ _id: new ObjectId(_id) }, { $set: action })
+    .updateOne({ _id }, { $set: action })
     .catch((err) => {
       res.status(500).send('Error in query execution: ' + err);
     })
@@ -194,7 +223,7 @@ app.patch('/api/:collection/:id', async (req: Request, res: Response) => {
     });
 });
 /* ********************** Default Route & Error Handler ********************** */
-app.use('/', (req: Request, res: Response, next: NextFunction) => {
+app.use('/', (req: Request, res: Response) => {
   res.status(404);
   if (!req.originalUrl.startsWith('/api/')) {
     res.send(paginaErrore);
@@ -203,7 +232,7 @@ app.use('/', (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+app.use((err: any, req: Request, res: Response) => {
   console.log(err.stack);
   res.status(500).send(err.message);
 });
