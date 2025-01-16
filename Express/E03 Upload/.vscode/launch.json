@@ -24,23 +24,11 @@
             "program": "${workspaceFolder}/server.ts",
             "request": "launch",
             "restart": true,
-            "runtimeExecutable": "tsx",
+            "runtimeExecutable": "nodemon",
             "skipFiles": [
                 "<node_internals>/**"
             ],
             "type": "node"
         },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Launch Program",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}\\server.ts",
-            "outFiles": [
-                "${workspaceFolder}/**/*.js"
-            ]
-        }
     ]
 }
