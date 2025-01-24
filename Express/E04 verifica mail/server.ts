@@ -88,10 +88,10 @@ const corsOptions = {
 
 //Client routes
 
-app.get('/api/images', async (req: any, res: any, next: any) => {
+app.post('/login', async (req) => {
   const client = new MongoClient(connectionString);
   await client.connect();
-  const collections = client.db(DB_NAME).collection('images');
+  const collections = client.db(DB_NAME).collection('Mail');
   collections
     .find()
     .toArray()
@@ -104,77 +104,4 @@ app.get('/api/images', async (req: any, res: any, next: any) => {
     .finally(() => {
       client.close();
     });
-});
-
-app.post('/api/uploadBinary', async (req: any, res: any, next: any) => {
-  const { user } = req['body'];
-  const { img } = req['files'];
-
-  fs.writeFile('./static/img/' + img.name, img.data, async function (err: any) {
-    if (err) {
-      res.status(500).send(err.message);
-    } else {
-      const newUser = {
-        username: user,
-        img: img.name
-      };
-      const client = new MongoClient(connectionString);
-      await client.connect().catch(function (err) {
-        res.status(503).send("Error: connection to DB server didn't went throught");
-      });
-      let collection = client.db(DB_NAME).collection('images');
-      collection
-        .insertOne(newUser)
-        .then(function (data) {
-          res.send(data);
-        })
-        .catch(function (err) {
-          res.status(500).send('Error: wrong query execution; ' + err.message);
-        })
-        .finally(function () {
-          client.close();
-        });
-    }
-  });
-});
-
-app.post('/api/uploadBase64', async (req, res) => {
-  const { user, imgName } = req.body;
-  const { img } = req.body;
-  if (img && imgName) {
-    const client = new MongoClient(connectionString);
-    await client.connect().catch((err) => {
-      res.status(500).send('Internal server error');
-    });
-    const collection = client.db(DB_NAME).collection('images');
-    const command = collection.insertOne({ username: user, img });
-    command.then((data) => {
-      res.send(data);
-    });
-    command.catch((err) => {
-      res.status(500).send('Internal server error');
-    });
-    command.finally(() => {
-      client.close();
-    });
-  }
-});
-
-app.post('/api/uploadBinaryCloudinary', async (req, res) => {});
-
-app.post('/api/uploadBase64Cloudinary', async (req, res) => {});
-
-//Default Route & Error Handler
-app.use('/', (req: any, res: any, next: any) => {
-  res.status(404);
-  if (!req.originalUrl.startsWith('/api/')) {
-    res.send(paginaErr);
-  } else {
-    res.send('Not Found: Resource ' + req.originalUrl);
-  }
-});
-
-app.use((err: any, req: any, res: any, next: any) => {
-  console.log(err.stack);
-  res.status(500).send(err.message);
 });

@@ -28,7 +28,7 @@ $(document).ready(function () {
         const tr = $('<tr>').appendTo(tbody).addClass('text-center');
         $('<td>').appendTo(tr).text(element.username);
         const td = $('<td>').appendTo(tr);
-        if (element.img) {
+        if (!element.img.startsWith('data:image/')) {
           element.img = './img/' + element.img;
         }
         $('<img>')
@@ -55,6 +55,7 @@ $(document).ready(function () {
     });
     const response = await inviaRichiesta('POST', '/api/uploadBase64', { user, img: imgBase64, imgName: img.name });
     if (response.status === 200) {
+      getImages();
     }
   });
 
@@ -79,6 +80,44 @@ $(document).ready(function () {
       }
     }
   });
+
+  $('#btnBinaryCloudinary').on('click', async function () {
+    const user = txtUser.val();
+    const img = txtFile.prop('files')[0];
+
+    if (!user || !img) {
+      alert('Error: you must put an user and a image');
+      return;
+    } else {
+      const formData = new FormData();
+      formData.append('user', user);
+      formData.append('img', img);
+      const response = await inviaRichiesta('POST', '/api/uploadBinaryCloudinary', formData);
+      if (response.status == 200) {
+        console.log(response.data);
+        alert('Upload completed correctly!');
+        getImages();
+      } else {
+        alert(response.status + ': ' + response.err);
+      }
+    }
+  });
+});
+
+$('#btnBase64Cloudinary').on('click', async function () {
+  const user = txtUser.val() || '';
+  const img = txtFile.prop('files')[0];
+  if (!user || !img) {
+    alert('Inserire username e immagine');
+    return;
+  }
+  const imgBase64 = await base64Convert(img).catch((err) => {
+    alert(err.message);
+  });
+  const response = await inviaRichiesta('POST', '/api/uploadBase64Cloudinary', { user, img: imgBase64, imgName: img.name });
+  if (response.status === 200) {
+    getImages();
+  }
 });
 
 /* *********************** resizeAndConvert() ****************************** */
