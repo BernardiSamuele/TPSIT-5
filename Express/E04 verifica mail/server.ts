@@ -88,18 +88,76 @@ const corsOptions = {
 
 //Client routes
 
-app.post('/login', async (req) => {
+app.post('/api/login', async (req, res) => {
+  const { username, password } = req.body;
   const client = new MongoClient(connectionString);
-  await client.connect();
-  const collections = client.db(DB_NAME).collection('Mail');
+  await client.connect().catch((err) => {
+    res.status(500).send('Internal server error: ' + err);
+  });
+  const collections = client.db(DB_NAME).collection('mail');
   collections
-    .find()
+    .find({ username: username, password: password })
     .toArray()
     .catch((err) => {
-      res.status(500).send('Collections access error: ' + err);
+      res.status(500).send({ message: 'Internal server error: ' + err });
     })
     .then((data) => {
-      res.send(data);
+      if (data && data.length > 0) {
+        res.status(200).send(data[0].mail);
+      } else {
+        res.status(401).send({ message: 'Invalid credentials' });
+      }
+    })
+    .finally(() => {
+      client.close();
+    });
+});
+
+type Mail = {
+  from: string;
+  subject: string;
+  body: string;
+  attachment?: string;
+};
+
+type User = {
+  name: string;
+  emails: Mail[];
+};
+app.post('/api/sendMail', async (req, res) => {
+  const { from, to, subject, message } = req.body;
+  if (!from || !to || !subject || !message) {
+    res.status(400).send({ message: 'Missing or malformed body' });
+    return;
+  }
+  const attachment = req['files']?.attachment;
+  const client = new MongoClient(connectionString);
+  await client.connect().catch((err) => {
+    res.status(500).send('Internal server error: ' + err);
+  });
+  const collections = client.db(DB_NAME).collection<Mail>('mail');
+  collections
+    .updateOne({ username: to }, { $push: { mail: { from, subject: subject, body: message, attachment: attachment?.name } } })
+    .catch((err) => {
+      res.status(500).send({ message: 'Internal server error: ' + err });
+    })
+    .then((data) => {
+      console.log('\n===========================\n' + data + '\n===========================\n');
+      if (data && data.modifiedCount === 1) {
+        if (attachment) {
+          fs.writeFile('./static/img/' + attachment.name, attachment.data, async function (err: any) {
+            if (err) {
+              res.status(500).send(err);
+              return;
+            }
+            res.send({ message: 'Mail sent correctly' });
+          });
+        } else {
+          res.send({ message: 'Mail sent correctly' });
+        }
+      } else {
+        res.status(503).send({ message: 'User not found' });
+      }
     })
     .finally(() => {
       client.close();

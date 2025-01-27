@@ -57,8 +57,7 @@ app.use('/', (req, res, next) => {
 
 // 5. CORS
 const whitelist = [
-  'http://my-crud-server.herokuapp.com ', // porta 80 (default)
-  'https://my-crud-server.herokuapp.com ', // porta 443 (default)
+  'https://bernardisamuele-crud-server.onrender.com/',
   'http://localhost:3000',
   'https://localhost:3001',
   'http://localhost:4200', // server angular
