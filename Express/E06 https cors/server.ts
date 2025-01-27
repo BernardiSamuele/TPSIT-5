@@ -3,10 +3,11 @@
 import http from 'http';
 import https from 'https';
 import fs from 'fs';
-import express, { NextFunction, Request, Response } from 'express';
+import express, { NextFunction, Request, response, Response } from 'express';
 import { MongoClient, ObjectId } from 'mongodb';
 import dotenv from 'dotenv';
 import cors, { CorsOptions } from 'cors';
+import { inviaRichiesta } from './libreria.js';
 
 /* ********************** Config ********************** */
 const app = express();
@@ -70,10 +71,8 @@ app.use('/', (req, res, next) => {
 
 // 5. CORS
 const whitelist = [
-  'http://my-crud-server.herokuapp.com ', // porta 80 (default)
-  'https://my-crud-server.herokuapp.com ', // porta 443 (default)
   'http://localhost:3000',
-  'https://localhost:3001',
+  // 'https://localhost:3001',
   'http://localhost:4200', // server angular
   'https://cordovaapp' // porta 443 (default)
 ];
@@ -91,15 +90,14 @@ const corsOptions: CorsOptions = {
 };
 app.use('/', cors(corsOptions));
 /* ********************** Client routes ********************** */
-app.get('/api/:collection', async (req: Request, res: Response) => {
-  const { collection: collectionName } = req.params;
-  const { filter } = req.query as { filter: string };
-
+app.get('/api/unicorns', async (req: Request, res: Response) => {
   const client = new MongoClient(connectionString);
-  await client.connect();
-  const collection = client.db(dbName).collection(collectionName);
+  await client.connect().catch((err) => {
+    res.status(503).send(`Errore connessione al database: ${err}`);
+  });
+  const collection = client.db(dbName).collection('unicorns');
 
-  const request = collection.find(JSON.parse(filter) ?? {}).toArray();
+  const request = collection.find({}).toArray();
   request.catch((err) => {
     res.status(500).send(`Errore esecuzione query: ${err}`);
   });
@@ -109,6 +107,36 @@ app.get('/api/:collection', async (req: Request, res: Response) => {
   request.finally(() => {
     client.close();
   });
+});
+
+app.post('/api/vampires', async (req: Request, res: Response) => {
+  const vampire = { name: req.body.name };
+  const client = new MongoClient(connectionString);
+  await client.connect().catch((err) => {
+    res.status(503).send(`Errore connessione al database: ${err}`);
+  });
+  const collection = client.db(dbName).collection('vampires');
+
+  const request = collection.insertOne(vampire);
+  request.catch((err) => {
+    res.status(500).send(`Errore esecuzione query: ${err}`);
+  });
+  request.then((data) => {
+    res.send(data);
+  });
+  request.finally(() => {
+    client.close();
+  });
+});
+
+app.get('/api/people', async (req: Request, res: Response) => {
+  const url = `https://randomuser.me/api/?results=5`;
+  const remoteResponse = await inviaRichiesta('GET', url);
+  if (remoteResponse.status == 200) {
+    res.send(remoteResponse.data);
+  } else {
+    res.status(remoteResponse.status).send(`Remote response error: ${remoteResponse.err}`);
+  }
 });
 
 /* ********************** Default Route & Error Handler ********************** */
