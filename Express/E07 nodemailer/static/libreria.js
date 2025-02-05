@@ -56,17 +56,3 @@ async function inviaRichiesta(method, url="", params={}) {
 	   return {"status":408, "err":"Connection Refused or Server timeout"}
 	}
 }
-
-function base64Convert(blob) 
-{
-    return new Promise(function(resolve, reject){
-    let reader = new FileReader();
-    reader.readAsDataURL(blob);
-    reader.onload = function (event) {
-        resolve(event.target.result); // event.target sarebbe reader
-    };
-    reader.onerror = function (error) {
-        reject(error);
-    };
-    });
-}

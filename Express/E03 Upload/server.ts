@@ -4,19 +4,25 @@ import fs from 'fs';
 import express, { response } from 'express';
 import cors from 'cors';
 import fileUpload from 'express-fileupload';
+import { MongoClient, ObjectId } from 'mongodb';
+import dotenv from 'dotenv';
+import cloudinary from 'cloudinary';
+import streamifier from 'streamifier';
+import { error } from 'console';
 
 const app = express();
 
 let paginaErr: string;
 
 //MONGO
-import { MongoClient, ObjectId } from 'mongodb';
-import dotenv from 'dotenv';
 dotenv.config({ path: '.env' });
 const connectionString = process.env.connectionStringAtlas;
 const DB_NAME = process.env.dbName;
 const PORT = process.env.PORT;
 console.log(connectionString);
+
+//Cloudinary
+cloudinary.v2.config(JSON.parse(process.env.cloudinary));
 
 //la callback di create server viene eseguita ad ogni richiesta giunta dal client
 http.createServer(app).listen(PORT, () => {
@@ -138,31 +144,94 @@ app.post('/api/uploadBinary', async (req: any, res: any, next: any) => {
   });
 });
 
-app.post('/api/uploadBase64', async (req, res) => {
-  const { user, imgName } = req.body;
-  const { img } = req.body;
-  if (img && imgName) {
+app.post('/api/uploadBase64', async (req: any, res: any, next: any) => {
+  const { user } = req['body'];
+  const { img } = req['body'];
+  const { imgName } = req['body'];
+
+  if (img) {
+    let newDocument = { username: user, img };
     const client = new MongoClient(connectionString);
-    await client.connect().catch((err) => {
-      res.status(500).send('Internal server error');
+    await client.connect().catch(function (err) {
+      res.status(503).send("Error: connection to DB server didn't went throught");
     });
-    const collection = client.db(DB_NAME).collection('images');
-    const command = collection.insertOne({ username: user, img });
-    command.then((data) => {
-      res.send(data);
-    });
-    command.catch((err) => {
-      res.status(500).send('Internal server error');
-    });
-    command.finally(() => {
-      client.close();
-    });
+    let collection = client.db(DB_NAME).collection('images');
+    collection
+      .insertOne(newDocument)
+      .then(function (data) {
+        res.send(data);
+      })
+      .catch(function (err) {
+        res.status(500).send('Error: query execution' + err.message);
+      })
+      .finally(function () {
+        client.close();
+      });
   }
 });
 
-app.post('/api/uploadBinaryCloudinary', async (req, res) => {});
+app.post('/api/uploadCloudinary', async (req: any, res: any, next: any) => {
+  const { user } = req['body'];
+  const { img } = req['files'];
 
-app.post('/api/uploadBase64Cloudinary', async (req, res) => {});
+  let consumer = cloudinary.v2.uploader.upload_stream({ folder: 'Esercizio 3' }, async (err, result) => {
+    if (err) {
+      res.status(500).send('Error: in uploading file on cloudinary - ' + err.message);
+    } else {
+      const newUser = {
+        username: user,
+        img: result.secure_url
+      };
+      const client = new MongoClient(connectionString);
+      await client.connect().catch(function (err) {
+        res.status(503).send("Error: connection to DB server didn't went throught");
+      });
+      let collection = client.db(DB_NAME).collection('images');
+      collection
+        .insertOne(newUser)
+        .then(function (data) {
+          res.send(data);
+        })
+        .catch(function (err) {
+          res.status(500).send('Error: wrong query execution; ' + err.message);
+        })
+        .finally(function () {
+          client.close();
+        });
+    }
+  });
+  streamifier.createReadStream(img.data).pipe(consumer);
+});
+
+app.post('/api/uploadCloudinaryBase64', (req: any, res: any, next: any) => {
+  const { user } = req['body'];
+  const { img } = req['body'];
+  const { imgName } = req['body'];
+
+  let p = cloudinary.v2.uploader.upload(img, { folder: 'Esercizio 3' });
+  p.catch(function (err) {
+    res.status(500).send('Error: in uploading file on cloudinary - ' + err.message);
+  });
+  p.then(async function (result) {
+    const newDocument = { username: user, img: result.secure_url };
+    const client = new MongoClient(connectionString);
+    await client.connect().catch(function (err) {
+      res.status(503).send("Error: connection to DB server didn't went throught");
+    });
+    let collection = client.db(DB_NAME).collection('images');
+    collection
+      .insertOne(newDocument)
+      .then(function (data) {
+        res.send(data);
+      })
+      .catch(function (err) {
+        res.status(500).send('Error: query execution - ' + err.message);
+      })
+      .finally(function () {
+        client.close();
+      });
+  });
+});
 
 //Default Route & Error Handler
 app.use('/', (req: any, res: any, next: any) => {

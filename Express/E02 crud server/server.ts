@@ -96,13 +96,13 @@ app.get('/api/collections', async (req: Request, res: Response) => {
 
 app.get('/api/:collection', async (req: Request, res: Response) => {
   const { collection: collectionName } = req.params;
-  const { filter } = req.query as { filter: string };
+  const filter: any = req.query.filter;
 
   const client = new MongoClient(connectionString);
   await client.connect();
   const collection = client.db(dbName).collection(collectionName);
 
-  const request = collection.find(JSON.parse(filter) ?? {}).toArray();
+  const request = collection.find(filter ?? {}).toArray();
   request.catch((err) => {
     res.status(500).send(`Errore esecuzione query: ${err}`);
   });
