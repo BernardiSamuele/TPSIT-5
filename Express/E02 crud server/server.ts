@@ -96,7 +96,7 @@ app.get('/api/collections', async (req: Request, res: Response) => {
 
 app.get('/api/:collection', async (req: Request, res: Response) => {
   const { collection: collectionName } = req.params;
-  const filter: any = req.query.filter;
+  const filter: any = req.query;
 
   const client = new MongoClient(connectionString);
   await client.connect();

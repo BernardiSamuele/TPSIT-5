@@ -99,7 +99,7 @@ $(document).ready(function () {
 
   async function getDataCollection(filter = {}) {
     divDettagli.empty();
-    const data = await inviaRichiesta('GET', '/api/' + currentCollection, { filter });
+    const data = await inviaRichiesta('GET', '/api/' + currentCollection, filter);
     if (data) {
       console.log(data);
 

@@ -1,0 +1,12 @@
+[
+  { "username":"pippo",  "password":"password", "img":"img6.jpg" },
+  { "username":"pluto",  "password":"password", "img":"img2.jpg" },
+  { "username":"minnie", "password":"password", "img":"img3.jpg" },
+  { "username":"sonny",  "password":"password", "img":"img4.jpg" },
+  { "username":"sally",  "password":"password", "img":"img5.jpg" },
+  { "username":"elly",   "password":"password", "img":"img1.jpg" },
+  { "username":"fanny",  "password":"password", "img":"img7.jpg" },
+  { "username":"colly",  "password":"password", "img":"img8.jpg" },
+  { "username":"sanny",  "password":"password", "img":"img9.jpg" },
+  { "username":"annie",  "password":"password", "img":"img10.jpg" }
+]

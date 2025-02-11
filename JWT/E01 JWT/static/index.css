@@ -1,0 +1,51 @@
+
+.container{
+	padding-top:15px;
+	/* visibility:hidden;  */
+}
+
+#btnLogout{
+	margin-top:18px;	
+}
+
+#frmInvia{
+	border:1px solid #AAA; 
+	background-color:#F2F2FF; 
+	padding:12px;	
+	margin:12px 0;
+}
+
+#frmInvia input{
+	padding:7px;
+	width:100%;
+	font-size:0.88em;
+	vertical-align:middle:
+
+}
+#frmInvia label{
+	justify-content:left;
+	vertical-align:middle:
+}
+
+#frmInvia button{
+	vertical-align:middle:
+}
+
+#tabMail{
+	border:2px solid #AAA; 
+	background-color:#F2F2FF; 
+	margin-top:20px;
+	margin-bottom:0;
+}
+
+/* terminale md */
+@media  (min-width:768px) and (max-width:992px){ 
+	#frmInvia input{
+		width:120%;
+	}
+	#frmInvia div:nth-of-type(3) input{
+		width:105%;
+	}
+}
+
+
