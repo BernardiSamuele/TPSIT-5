@@ -2,7 +2,7 @@ import http from 'http';
 import https from 'https';
 import url from 'url';
 import fs from 'fs';
-import express, { response } from 'express';
+import express, { Request, Response, response } from 'express';
 import { MongoClient, ObjectId } from 'mongodb';
 import cors from 'cors';
 import fileUpload from 'express-fileupload';
@@ -15,7 +15,7 @@ let paginaErr: string;
 
 // Config
 dotenv.config({ path: '.env' });
-const connectionString = process.env.connectionStringAtlas;
+const connectionString = process.env.connectionStringLocal;
 const DB_NAME = process.env.dbName;
 const PORT = process.env.PORT;
 // const auth = JSON.parse(process.env.auth);
@@ -57,7 +57,7 @@ app.use('/', (req: any, res: any, next: any) => {
 //2. Static resource
 app.use('/', express.static('./static'));
 
-//3. Buddy params
+//3. Body params
 //Queste due entry ervono per agganciare i parametri nel body
 app.use('/', express.json({ limit: '10mb' }));
 app.use('/', express.urlencoded({ limit: '10mb', extended: true }));
@@ -98,6 +98,27 @@ const corsOptions = {
   credentials: true
 };
 app.use('/', cors(corsOptions));
+
+// 7. Gestione login
+app.post('/api/login', async (req: Request, res: Response) => {
+  const user = req.body.username;
+  const password = req.body.password;
+  const client = new MongoClient(connectionString);
+  await client.connect().catch((err) => {
+    res.status(503).send('Errore connessione al database: ' + DB_NAME);
+  });
+  const collection = client.db(DB_NAME).collection('mail');
+  const request = collection.findOne({ username: user });
+  request.catch((err) => {
+    res.status(500).send('Errore esecuzione query');
+  });
+  request.then((dbUser) => {
+    if (!dbUser) {
+      res.status(401).send('Username o password non validi');
+    } else {
+    }
+  });
+});
 
 //Client routes
 
