@@ -178,13 +178,10 @@ app.delete('/api/:collection/:id', async (req: Request, res: Response) => {
     });
 });
 
-/**
- * Nella richiesta bisogna mettere {action : {...}}
- */
 app.put('/api/:collection/:id', async (req: Request, res: Response) => {
   const { id, collection: collectionName } = req.params;
   const _id: any = ObjectId.isValid(id) ? new ObjectId(id) : id;
-  const { action } = req.body;
+  const action = req.body;
 
   const client = new MongoClient(connectionString);
   await client.connect();
@@ -227,12 +224,9 @@ app.put('/api/:collection/', async (req: Request, res: Response) => {
     });
 });
 
-/**
- * Nella richiesta bisogna mettere {action : {...}}
- */
 app.patch('/api/:collection/:id', async (req: Request, res: Response) => {
   const { id, collection: collectionName } = req.params;
-  const { action } = req.body;
+  const action = req.body;
   const _id: any = ObjectId.isValid(id) ? new ObjectId(id) : id;
 
   const client = new MongoClient(connectionString);

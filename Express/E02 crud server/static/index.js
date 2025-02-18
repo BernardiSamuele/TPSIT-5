@@ -86,7 +86,7 @@ $(document).ready(function () {
             alert('Error! Invalid JSON');
             return;
           }
-          const data = await inviaRichiesta('PUT', `/api/${currentCollection}/${_id}`, { action: json });
+          const data = await inviaRichiesta('PUT', `/api/${currentCollection}/${_id}`, json);
           if (data?.modifiedCount == 1) {
             alert('Record updated successfully!');
             getDataCollection();
@@ -198,7 +198,7 @@ $(document).ready(function () {
               if ('_id' in json) {
                 delete json._id;
               }
-              const data = await inviaRichiesta('PATCH', `/api/${currentCollection}/${id}`, { action: json });
+              const data = await inviaRichiesta('PATCH', `/api/${currentCollection}/${id}`, json);
               if (data?.modifiedCount == 1) {
                 alert('Record updated successfully!');
                 getDataCollection();
