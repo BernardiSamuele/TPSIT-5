@@ -4,15 +4,15 @@ $(document).ready(function () {
 
   getMails();
 
-  function getMails() {
-    let mailRQ = inviaRichiesta('GET', '/api/elencoMail');
-    mailRQ.then(function (response) {
+  async function getMails() {
+    let httpResponse = await inviaRichiesta('GET', '/api/elencoMail');
+    if (httpResponse.status == 200) {
       $('.container').css('visibility', 'visible');
       $('#txtTo').val('');
       $('#txtSubject').val('');
       $('#txtMessage').val('');
       tBody.empty();
-      for (let mail of response.data) {
+      for (let mail of httpResponse.data) {
         let tr = $('<tr>');
         let td;
         td = $('<td>').text(mail.from).appendTo(tr);
@@ -20,22 +20,32 @@ $(document).ready(function () {
         td = $('<td>').text(mail.body).appendTo(tr);
         tBody.append(tr);
       }
-    });
-    mailRQ.catch(errore);
+    } else {
+      if (httpResponse.status == 403) {
+        window.location.href = '/login.html';
+      } else {
+        alert(httpResponse.status + ': ' + httpResponse.err);
+      }
+    }
   }
 
-  $('#btnInvia').on('click', function () {
+  $('#btnInvia').on('click', async function () {
     let mail = {
       to: $('#txtTo').val(),
       subject: $('#txtSubject').val(),
       message: $('#txtMessage').val()
     };
-    let newMailRQ = inviaRichiesta('POST', '/api/newMail', mail);
-    newMailRQ.then(function (response) {
+    let httpRequest = await inviaRichiesta('POST', '/api/newMail', mail);
+    if (httpRequest.status == 200) {
       console.log(response.data);
       alert(response.data.ris);
-    });
-    newMailRQ.catch(errore);
+    } else {
+      if (httpResponse.status == 403) {
+        window.location.href = '/login.html';
+      } else {
+        alert(httpResponse.status + ': ' + httpResponse.err);
+      }
+    }
   });
 
   /* ************************* LOGOUT  *********************** */

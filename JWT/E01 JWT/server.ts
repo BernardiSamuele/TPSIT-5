@@ -2,7 +2,7 @@ import http from 'http';
 import https from 'https';
 import url from 'url';
 import fs from 'fs';
-import express, { CookieOptions, Request, Response, response } from 'express';
+import express, { CookieOptions, NextFunction, Request, Response, response } from 'express';
 import { Document, MongoClient, ObjectId, WithId } from 'mongodb';
 import cors from 'cors';
 import fileUpload from 'express-fileupload';
@@ -107,9 +107,15 @@ app.use('/', cors(corsOptions));
 // 7. Gestione login
 app.use(cookieParser()); // Aggiunge un campo cookies nella response e nella request
 const cookiesOptions = {
-  path: '/', 
-  maxAge: 
-}
+  path: '/',
+  maxAge: tokenExpiresIn * 1000,
+  // Il cookie non è accessibile da javascript, ma solo da http(s)
+  httpOnly: true,
+  // Solo HTTPS
+  secure: true,
+  // Cookie accessibile extra domain
+  sameSite: false
+};
 
 app.post('/api/login', async (req: Request, res: Response) => {
   const user = req.body.username;
@@ -133,7 +139,7 @@ app.post('/api/login', async (req: Request, res: Response) => {
           console.log(err.stack);
         } else if (ok) {
           const token = createToken(dbUser);
-          
+
           res.cookie('token', token, cookiesOptions);
         } else {
           res.status(401).send('Username o password non validi');
@@ -143,7 +149,15 @@ app.post('/api/login', async (req: Request, res: Response) => {
   });
 });
 
+// 8. Controllo token
+app.use('/api/', (req: Request, res: Response, next: NextFunction) => {
+  if (!req.cookies.token) {
+    res.status(403).send('token mancante');
+  }
+});
+
 //Client routes
+app.get('/api/elencoMail', (req: Request, res: Response, next: NextFunction) => {});
 
 //Default Route & Error Handler
 app.use('/', (req: any, res: any, next: any) => {

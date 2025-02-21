@@ -15,7 +15,7 @@ $(document).ready(function () {
     if (event.keyCode == 13) controllaLogin();
   });
 
-  function controllaLogin() {
+  async function controllaLogin() {
     _username.removeClass('is-invalid');
     _username.prev().removeClass('icona-rossa');
     _password.removeClass('is-invalid');
@@ -30,16 +30,16 @@ $(document).ready(function () {
       _password.addClass('is-invalid');
       _password.prev().addClass('icona-rossa');
     } else {
-      let request = inviaRichiesta('POST', '/api/login', { username: _username.val(), password: _password.val() });
-      request.catch(function (err) {
-        if (err.response.status == 401) {
-          // unauthorized
+      let httpResponse = await inviaRichiesta('POST', '/api/login', { username: _username.val(), password: _password.val() });
+      if (httpResponse.status != 200) {
+        if (httpResponse.status == 401) {
           _lblErrore.show();
-        } else errore(err);
-      });
-      request.then(function (response) {
-        window.location.href = 'index.html';
-      });
+        } else {
+          alert(httpResponse.err);
+        }
+      } else {
+        window.location.href = '/index.html';
+      }
     }
   }
 
