@@ -2,6 +2,7 @@
 $(document).ready(function () {
   let tBody = $('#tabMail tbody');
 
+  $('.container').css('visibility', 'hidden');
   getMails();
 
   async function getMails() {
@@ -35,10 +36,10 @@ $(document).ready(function () {
       subject: $('#txtSubject').val(),
       message: $('#txtMessage').val()
     };
-    let httpRequest = await inviaRichiesta('POST', '/api/newMail', mail);
-    if (httpRequest.status == 200) {
-      console.log(response.data);
-      alert(response.data.ris);
+    let httpResponse = await inviaRichiesta('POST', '/api/newMail', mail);
+    if (httpResponse.status == 200) {
+      console.log(httpResponse.data);
+      alert(httpResponse.data.ris);
     } else {
       if (httpResponse.status == 403) {
         window.location.href = '/login.html';
@@ -56,18 +57,18 @@ $(document).ready(function () {
 		per cui in quel caso occorre inviare una richiesta al server        */
 
   // if using http headers
-  $('#btnLogout').on('click', function () {
-    localStorage.removeItem('token');
-    window.location.href = 'login.html';
-  });
+  // $('#btnLogout').on('click', function () {
+  //   localStorage.removeItem('token');
+  //   window.location.href = 'login.html';
+  // });
 
-  /* if using cookies 
-	$("#btnLogout").on("click", function() {
-		let rq = inviaRichiesta('POST', '/api/logout');
-		rq.done(function(data) {
-			window.location.href = "login.html"
-		});
-		rq.fail(errore)		
-	}) 
-	*/
+  // if using cookies
+  $('#btnLogout').on('click', async function () {
+    const httpResponse = await inviaRichiesta('POST', '/api/logout');
+    if (httpResponse.status == 200) {
+      window.location.href = 'login.html';
+    } else {
+      alert(httpResponse.status + ': ' + httpResponse.err);
+    }
+  });
 });

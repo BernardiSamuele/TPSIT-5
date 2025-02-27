@@ -35,7 +35,7 @@ $(document).ready(function () {
         if (httpResponse.status == 401) {
           _lblErrore.show();
         } else {
-          alert(httpResponse.err);
+          alert(httpResponse.status + ' ' + httpResponse.err);
         }
       } else {
         window.location.href = '/index.html';
@@ -46,4 +46,32 @@ $(document).ready(function () {
   _lblErrore.children('button').on('click', function () {
     _lblErrore.hide();
   });
+
+  // Login with Google
+  google.accounts.id.initialize({
+    client_id: '783367186028-4aqrbohhekbo5qvsnd2t46k1suiaieda.apps.googleusercontent.com',
+    callback: async function (response) {
+      if (response.credential !== '') {
+        let googleToken = response.credential;
+        console.log('google token : ', googleToken);
+        let res = await inviaRichiesta('POST', '/api/googleLogin', { googleToken: googleToken });
+        if (res.status == 200) {
+          window.location.href = 'index.html';
+        } else alert(res.status + ' : ' + res.err);
+      }
+    }
+  });
+
+  google.accounts.id.renderButton(
+    document.getElementById('googleDiv'), // qualunque DIV della pagina
+    {
+      theme: 'outline',
+      size: 'large',
+      type: 'standard',
+      text: 'continue_with',
+      shape: 'rectangular',
+      logo_alignment: 'center'
+    }
+  );
+  google.accounts.id.prompt();
 });

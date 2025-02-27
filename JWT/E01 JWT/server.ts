@@ -25,9 +25,9 @@ const tokenExpiresIn = 30;
 // const auth = JSON.parse(process.env.auth);
 
 //la callback di create server viene eseguita ad ogni richiesta giunta dal client
-http.createServer(app).listen(PORT, () => {
-  console.log('Server listening on port: ' + PORT);
-});
+// http.createServer(app).listen(PORT, () => {
+//   console.log('Server listening on port: ' + PORT);
+// });
 
 function init() {
   fs.readFile('./static/error.html', (err, data) => {
@@ -40,7 +40,7 @@ function init() {
 }
 
 /* ********************** HTTPS server ********************** */
-const HTTPS_PORT = 3001;
+const HTTPS_PORT = process.env.HTTPS_PORT;
 const privateKey = fs.readFileSync('./keys/privateKey.pem', 'utf8');
 const publicKey = fs.readFileSync('./keys/publicKey.crt', 'utf8');
 const jwtKey = fs.readFileSync('./keys/jwtKey', 'utf8');
@@ -121,15 +121,15 @@ app.post('/api/login', async (req: Request, res: Response) => {
   const user = req.body.username;
   const password = req.body.password;
   const client = new MongoClient(connectionString);
-  await client.connect().catch((err) => {
+  await client.connect().catch(err => {
     res.status(503).send('Errore connessione al database: ' + DB_NAME);
   });
   const collection = client.db(DB_NAME).collection('mail');
   const request = collection.findOne({ username: user });
-  request.catch((err) => {
+  request.catch(err => {
     res.status(500).send('Errore esecuzione query');
   });
-  request.then((dbUser) => {
+  request.then(dbUser => {
     if (!dbUser) {
       res.status(401).send('Username o password non validi');
     } else {
@@ -141,6 +141,7 @@ app.post('/api/login', async (req: Request, res: Response) => {
           const token = createToken(dbUser);
 
           res.cookie('token', token, cookiesOptions);
+          res.send({ ris: 'ok' });
         } else {
           res.status(401).send('Username o password non validi');
         }
@@ -149,15 +150,128 @@ app.post('/api/login', async (req: Request, res: Response) => {
   });
 });
 
-// 8. Controllo token
+// 8. Google login
+app.post('/api/googleLogin', async (req: Request, res: Response) => {
+  const payload: any = jwt.decode(req.body.googleToken);
+  const username = payload.email;
+
+  const client = new MongoClient(connectionString);
+  await client.connect().catch(err => {
+    res.status(503).send('Errore connessione al database: ' + DB_NAME);
+  });
+  const collection = client.db(DB_NAME).collection('mail');
+  const regex = new RegExp(`^${username}$`, 'i');
+  const request = collection.findOne({ username: regex });
+  request.catch(err => {
+    res.status(500).send('Errore esecuzione query');
+    client.close();
+  });
+  request.then(dbUser => {
+    if (!dbUser) {
+      const newUser = {
+        username: username,
+        password: '',
+        mail: []
+      };
+      const request2 = collection.insertOne(newUser);
+      request2.catch(err => {
+        res.status(500).send('Errore inserimento nuovo utente');
+      });
+      request2.then(mongoResponse => {
+        console.log('Mongo: ', mongoResponse.insertedId.toString());
+        const token = createToken(newUser);
+        res.cookie('token', token, cookiesOptions);
+        res.send({ ris: 'ok' });
+      });
+      request2.finally(() => {
+        client.close();
+      });
+    } else {
+      const token = createToken(dbUser);
+      res.cookie('token', token, cookiesOptions);
+      res.send({ ris: 'ok' });
+      client.close();
+    }
+  });
+});
+
+// 9. Logout
+app.post('/api/logout', (req: Request, res: Response, next: NextFunction) => {
+  let options = {
+    ...cookiesOptions,
+    maxAge: -1
+  };
+  res.cookie('token', '', options).send({ ris: 'Ok' });
+});
+
+// 10. Controllo token
 app.use('/api/', (req: Request, res: Response, next: NextFunction) => {
   if (!req.cookies.token) {
     res.status(403).send('token mancante');
+  } else {
+    const token = req.cookies.token;
+    jwt.verify(token, jwtKey, (err, payload) => {
+      if (err) {
+        res.status(403).send('token non valido o scaduto');
+      } else {
+        let newToken = createToken(payload);
+        res.cookie('token', newToken, cookiesOptions);
+        req['payload'] = payload;
+        next();
+      }
+    });
   }
 });
 
 //Client routes
-app.get('/api/elencoMail', (req: Request, res: Response, next: NextFunction) => {});
+app.get('/api/elencoMail', async (req: Request, res: Response, next: NextFunction) => {
+  const _id = new ObjectId(req['payload']._id as string);
+  const client = new MongoClient(connectionString);
+  await client.connect().catch(err => {
+    res.status(503).send('Errore connessione al database');
+  });
+  const collection = client.db(DB_NAME).collection('mail');
+  const request = collection.findOne({ _id }, { projection: { mail: 1 } });
+  request.catch(err => {
+    res.status(500).send('errore esecuzione query');
+    console.log(err.stack);
+  });
+  request.then(data => {
+    res.send(data.mail.reverse());
+  });
+  request.finally(() => {
+    client.close();
+  });
+});
+
+app.post('/api/newMail', async (req: Request, res: Response, next: NextFunction) => {
+  const destinatario = req.body.to;
+  const mittente = req['payload'].username;
+  const mail = {
+    from: mittente,
+    subject: req.body.subject,
+    body: req.body.message
+  };
+  const client = new MongoClient(connectionString);
+  await client.connect().catch(err => {
+    res.status(503).send('errore connessione al database');
+  });
+  const collection = client.db(DB_NAME).collection<unknown>('mail');
+  const request = collection.updateOne({ username: destinatario }, { $push: { mail } });
+  request.catch(err => {
+    res.status(500).send('Errore esecuzione query');
+  });
+  request.then(data => {
+    if (data.matchedCount == 0) {
+      res.status(500).send('Destinatario inesistente');
+    } else {
+      res.send({ ris: 'Mail inviata correttamente' });
+    }
+  });
+  request.finally(() => {
+    client.close();
+  });
+});
 
 //Default Route & Error Handler
 app.use('/', (req: any, res: any, next: any) => {
@@ -180,7 +294,7 @@ function createToken(data) {
   const payload = {
     iat: data.iat || now,
     exp: now + tokenExpiresIn,
-    id: data._id,
+    _id: data._id,
     username: data.username,
     admin: false
   };
