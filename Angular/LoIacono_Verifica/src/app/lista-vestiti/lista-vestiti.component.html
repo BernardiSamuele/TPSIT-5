@@ -1,0 +1,80 @@
+<app-filtri
+  (ordina)="ordinaVestiti($event)"
+  (categoriaCambiata)="cambiaCategoria($event)"
+></app-filtri>
+<div id="list">
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Categoria</th>
+        <th>Taglia</th>
+        <th>Prezzo</th>
+      </tr>
+    </thead>
+    @if (this.vestitiService.vestiti) {
+    <tbody>
+      @for (vestito of this.vestitiService.vestiti; track $index) { @if
+      (categoria == vestito.Categoria || categoria == '' || categoria == 'All')
+      {
+      <tr
+        [ngClass]="{
+          'giacca-style': vestito.Categoria == 'Giacche',
+          'pantaloni-style': vestito.Categoria == 'Pantaloni',
+          'maglie-style': vestito.Categoria == 'Maglie',
+          'accessori-style': vestito.Categoria == 'Accessori'
+        }"
+      >
+        <td (click)="seeDetails(vestito)">{{ vestito.Nome }}</td>
+        <td (click)="seeDetails(vestito)">{{ vestito.Categoria }}</td>
+        <td (click)="seeDetails(vestito)">{{ vestito.Taglia }}</td>
+        <td
+          (click)="seeDetails(vestito)"
+          [ngStyle]="{
+            backgroundColor:
+              vestito.Prezzo < 20
+                ? 'green'
+                : vestito.Prezzo >= 20 && vestito.Prezzo <= 50
+                ? 'orange'
+                : 'red'
+          }"
+        >
+          {{ vestito.Prezzo }}
+        </td>
+        <td><button (click)="eliminaVestito(vestito)">elimina</button></td>
+      </tr>
+      } }
+    </tbody>
+    } @else {
+    <h4>Nessun vestito disponibile</h4>
+    }
+  </table>
+</div>
+
+<div id="add">
+  <h2>Aggiungi vestito</h2>
+  <span
+    >Nome: <input type="text" name="" id="" [(ngModel)]="nomeVestito" /></span
+  ><br />
+  <span
+    >Categoria:
+    <input type="text" name="" id="" [(ngModel)]="categoriaVestito" /></span
+  ><br />
+  <span
+    >Taglia:
+    <input type="text" name="" id="" [(ngModel)]="tagliaVestito" /></span
+  ><br />
+  <span
+    >Prezzo:
+    <input type="number" name="" id="" [(ngModel)]="prezzoVestito" /></span
+  ><br />
+  <span
+    >Descrizione:
+    <input type="text" name="" id="" [(ngModel)]="descrizioneVestito" /></span
+  ><br />
+  <span>Url: <input type="text" name="" id="" [(ngModel)]="urlVestito" /></span
+  ><br />
+  <button (click)="aggiungiVestito()">Aggiungi</button>
+</div>
+
+<app-dettagli-vestiti [vestito]="vestitoSelezionato"></app-dettagli-vestiti>

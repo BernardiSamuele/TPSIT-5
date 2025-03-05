@@ -1,0 +1,31 @@
+#add{
+    border: 1px solid black;
+    float: right;
+    width: 500px;
+    height: 250px;
+    top: 25px;
+    position: absolute;
+    right: 25px;
+}
+
+
+
+.giacca-style{
+    background-color: antiquewhite;
+    font-weight: bold;
+    text-decoration: underline;
+}
+.pantaloni-style{
+    background-color: cornflowerblue;
+    font-style: italic;
+    text-decoration: underline;
+}
+.maglie-style{
+    background-color: powderblue;
+    font-weight: bold;
+    text-decoration: dotted;
+}
+.accessori-style{
+    background-color:whitesmoke;
+    text-decoration: wavy; 
+}

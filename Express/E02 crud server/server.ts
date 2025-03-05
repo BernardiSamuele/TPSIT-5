@@ -10,7 +10,7 @@ import cors, { CorsOptions } from 'cors';
 /* ********************** Mongo config ********************** */
 dotenv.config({ path: '.env' });
 const dbName = process.env.dbName;
-const connectionString = process.env.connectionStringAtlas!;
+const connectionString = process.env.connectionStringLocal!;
 
 /* ********************** HTTP server ********************** */
 const port = process.env.port;
@@ -83,10 +83,10 @@ app.get('/api/collections', async (req: Request, res: Response) => {
   const db = client.db(dbName);
 
   const request = db.listCollections().toArray();
-  request.then((data) => {
+  request.then(data => {
     res.send(data);
   });
-  request.catch((err) => {
+  request.catch(err => {
     res.status(500).send(`Collections access error: ${err}`);
   });
   request.finally(() => {
@@ -103,10 +103,10 @@ app.get('/api/:collection', async (req: Request, res: Response) => {
   const collection = client.db(dbName).collection(collectionName);
 
   const request = collection.find(filter ?? {}).toArray();
-  request.catch((err) => {
+  request.catch(err => {
     res.status(500).send(`Errore esecuzione query: ${err}`);
   });
-  request.then((data) => {
+  request.then(data => {
     res.send(data);
   });
   request.finally(() => {
@@ -125,10 +125,10 @@ app.get('/api/:collection/:id', async (req: Request, res: Response) => {
 
   collection
     .findOne({ _id })
-    .catch((err) => {
+    .catch(err => {
       res.status(500).send(`Error in query execution: ${err}`);
     })
-    .then((data) => {
+    .then(data => {
       res.send(data);
     })
     .finally(() => {
@@ -146,10 +146,10 @@ app.post('/api/:collection/', async (req: Request, res: Response) => {
 
   collection
     .insertOne(newRecord)
-    .catch((err) => {
+    .catch(err => {
       res.status(500).send(`Error in query execution: ${err}`);
     })
-    .then((data) => {
+    .then(data => {
       res.send(data);
     })
     .finally(() => {
@@ -167,10 +167,10 @@ app.delete('/api/:collection/:id', async (req: Request, res: Response) => {
 
   collection
     .deleteOne({ _id })
-    .catch((err) => {
+    .catch(err => {
       res.status(500).send(`Error in query execution: ${err}`);
     })
-    .then((data) => {
+    .then(data => {
       res.send(data);
     })
     .finally(() => {
@@ -189,10 +189,10 @@ app.put('/api/:collection/:id', async (req: Request, res: Response) => {
 
   collection
     .updateOne({ _id: _id }, action)
-    .catch((err) => {
+    .catch(err => {
       res.status(500).send('Error in query execution: ' + err);
     })
-    .then((data) => {
+    .then(data => {
       res.send(data);
     })
     .finally(() => {
@@ -213,10 +213,10 @@ app.put('/api/:collection/', async (req: Request, res: Response) => {
 
   collection
     .updateMany(filter, action)
-    .catch((err) => {
+    .catch(err => {
       res.status(500).send('Error in query execution: ' + err);
     })
-    .then((data) => {
+    .then(data => {
       res.send(data);
     })
     .finally(() => {
@@ -235,10 +235,10 @@ app.patch('/api/:collection/:id', async (req: Request, res: Response) => {
 
   collection
     .updateOne({ _id }, { $set: action })
-    .catch((err) => {
+    .catch(err => {
       res.status(500).send('Error in query execution: ' + err);
     })
-    .then((data) => {
+    .then(data => {
       res.send(data);
     })
     .finally(() => {

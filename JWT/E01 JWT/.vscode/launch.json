@@ -24,7 +24,7 @@
             "program": "${workspaceFolder}/server.ts",
             "request": "launch",
             "restart": true,
-            "runtimeExecutable": "nodemon",
+            "runtimeExecutable": "tsx",
             "skipFiles": [
                 "<node_internals>/**"
             ],

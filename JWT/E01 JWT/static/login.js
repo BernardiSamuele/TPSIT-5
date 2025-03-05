@@ -74,4 +74,20 @@ $(document).ready(function () {
     }
   );
   google.accounts.id.prompt();
+
+  $('#btnPwdDimenticata').on('click', async function () {
+    if (_username.val() == '') {
+      _username.addClass('is-invalid');
+      _username.prev().addClass('icona-rossa');
+    } else {
+      _username.removeClass('is-invalid');
+      _username.prev().removeClass('icona-rossa');
+      let httpResponse = await inviaRichiesta('POST', '/api/pwdDimenticata', { username: _username.val() });
+      if (httpResponse.status == 200) {
+        alert('Nuova Password inviata all indirizzo mail indicato');
+      } else {
+        alert(httpResponse.status + ' : ' + httpResponse.err);
+      }
+    }
+  });
 });

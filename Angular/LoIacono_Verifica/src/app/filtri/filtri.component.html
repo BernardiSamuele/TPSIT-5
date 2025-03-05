@@ -1,0 +1,10 @@
+<span>Ordinamento prezzo: </span><br>
+<span><input type="radio" name="ord" id="rdbSy" (click)="ordinaCrescente()">↑</span>
+<span><input type="radio" name="ord" id="" (click)="ordinaDecrescente()">↓</span><br>
+<span>Filtro Categoria: 
+<select [(ngModel)]="selectedCategoria" (change)="onChangeCategoria()">
+@for (item of categorie; track $index) {
+    <option value="{{item}}">{{item}}</option>
+}
+</select>
+</span>

@@ -11,6 +11,7 @@ import cookieParser from 'cookie-parser';
 import nodeMailer from 'nodemailer';
 import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
+import { google } from 'googleapis';
 
 const app = express();
 
@@ -204,7 +205,97 @@ app.post('/api/logout', (req: Request, res: Response, next: NextFunction) => {
   res.cookie('token', '', options).send({ ris: 'Ok' });
 });
 
-// 10. Controllo token
+//10. oAuth2 Configuration
+const oAuth2Credentials = JSON.parse(process.env.OAuth2 as any);
+const OAuth2 = google.auth.OAuth2; // oggetto OAuth2
+// L’oggetto OAuth2 serve per richiedere il Bearer Token
+const OAuth2Client = new OAuth2(oAuth2Credentials['client_id'], oAuth2Credentials['client_secret']);
+OAuth2Client.setCredentials({
+  refresh_token: oAuth2Credentials.refresh_token
+});
+let auth2Options: any = {
+  type: 'OAuth2',
+  user: 's.bernardi.2625@vallauri.edu',
+  clientId: oAuth2Credentials.client_id,
+  clientSecret: oAuth2Credentials.client_secret,
+  refreshToken: oAuth2Credentials.refresh_token,
+  accessToken: '' //rigenerato ogni volta
+};
+const message = fs.readFileSync('./message.html', 'utf-8');
+
+//11. Password Dimenticata
+app.post('/api/pwdDimenticata', async function (req: any, res: any, next: any) {
+  let username = req.body.username;
+  const client = new MongoClient(connectionString);
+  await client.connect().catch(function (err) {
+    res.status(503).send('Errore connessione al Database');
+  });
+  const collection = client.db(DB_NAME).collection('mail');
+  const regex = new RegExp('^' + username + '$', 'i');
+  const request = collection.findOne({ username: regex });
+  request.catch(function (err) {
+    res.status(500).send('Errore esecuzione query ' + err.message);
+    client.close();
+  });
+  request.then(async function (dbUser) {
+    if (!dbUser) {
+      res.status(401).send('Username non valido');
+      client.close();
+    } else {
+      let newPwd = '';
+      for (let i = 0; i < 12; i++) {
+        newPwd += String.fromCharCode(Math.floor(Math.random() * 26) + 65);
+      }
+      let msg = message.replace('__user', username).replace('__password', newPwd);
+      auth2Options.accessToken = await OAuth2Client.getAccessToken();
+
+      const trasporter = nodeMailer.createTransport({
+        service: 'gmail',
+        auth: auth2Options
+      });
+
+      const mailOptions = {
+        from: auth2Options.user,
+        to: username,
+        subject: 'Nuova Password Per Rilievi e Perizie',
+        html: msg,
+        attachments: [
+          {
+            filename: 'qrCode.png',
+            path: './qrCode.png'
+          }
+        ]
+      };
+
+      trasporter.sendMail(mailOptions, function (err: any, info: any) {
+        if (err) {
+          res.status(500).send('Errore Invio Mai ' + err.message);
+          client.close();
+        } else {
+          res.send({ ris: 'OK' });
+          trasporter.close();
+          const request2 = collection.updateOne({ username: regex }, { $set: { password: bcrypt.hashSync(newPwd, 10), oldPass: newPwd } });
+          request2.catch(err => {
+            console.log(err.stack);
+            res.status(500).send('Errore aggiornamento password');
+          });
+          request2.then(data => {
+            console.log('Aggiornata password');
+            res.send({ ris: 'OK' });
+          });
+          request2.finally(() => {
+            client.close();
+          });
+        }
+      });
+    }
+  });
+  request.finally(function () {
+    client.close();
+  });
+});
+
+// 12. Controllo token
 app.use('/api/', (req: Request, res: Response, next: NextFunction) => {
   if (!req.cookies.token) {
     res.status(403).send('token mancante');
