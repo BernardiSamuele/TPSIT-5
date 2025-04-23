@@ -136,6 +136,29 @@ app.get('/api/:collection/:id', async (req: Request, res: Response) => {
     });
 });
 
+app.get('/api/filmSearch/:collection/:name', async (req: Request, res: Response) => {
+  const { name } = req.params;
+  const nome: any = new RegExp(name, 'ig');
+  const { collection: collectionName } = req.params;
+
+  const client = new MongoClient(connectionString);
+  await client.connect();
+  const collection = client.db(dbName).collection(collectionName);
+
+  collection
+    .find({ titolo: nome })
+    .toArray()
+    .catch(err => {
+      res.status(500).send(`Error in query execution: ${err}`);
+    })
+    .then(data => {
+      res.send(data);
+    })
+    .finally(() => {
+      client.close();
+    });
+});
+
 app.post('/api/:collection/', async (req: Request, res: Response) => {
   const newRecord = req.body;
 

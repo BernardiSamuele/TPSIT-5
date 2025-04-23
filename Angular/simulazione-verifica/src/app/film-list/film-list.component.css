@@ -1,0 +1,10 @@
+.container {
+  max-width: 600px;
+  margin: auto;
+}
+.search-box {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}

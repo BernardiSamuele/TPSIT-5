@@ -1,0 +1,24 @@
+<div class="container">
+  <h2 class="text-center">{{ this.film.titolo }}</h2>
+  <p class="text-center">
+    genere {{ this.film.genere }} - 2017 {{ this.film.anno }}
+  </p>
+  <img
+    src="assets/img/{{ this.film.titolo }}.png"
+    alt="Rosso Istanbul"
+    class="movie-poster"
+  />
+  <div class="movie-details">
+    <p>
+      {{ this.film.descrizione }}
+    </p>
+    <p><strong>prezzo:</strong> {{ this.film.descrizione }}</p>
+    <p><strong>visualizzazioni:</strong> {{ this.film.nVisualizzazioni }}</p>
+  </div>
+  <div class="buttons">
+    <button class="btn btn-primary" [routerLink]="['']">Home</button>
+    <button class="btn btn-primary" (click)="this.playVideo()">
+      Riproduci
+    </button>
+  </div>
+</div>

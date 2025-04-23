@@ -1,0 +1,17 @@
+[
+  {"username":"pippo",  "img":"img6.jpg", "occupato":false, "messages":[] },
+  {"username":"pluto",  "img":"img2.jpg", "occupato":false, "messages":[] },
+  {"username":"minnie", "img":"img3.jpg", "occupato":false, "messages":[] },
+  {"username":"sonny",  "img":"img4.jpg", "occupato":false, "messages":[] },
+  {"username":"sally",  "img":"",         "occupato":false, "messages":[] },
+  {"username":"elly",   "img":"img1.jpg", "occupato":false, "messages":[] },
+  {"username":"fanny",  "img":"img7.jpg", "occupato":false, "messages":[] },
+  {"username":"colly",  "img":"img8.jpg", "occupato":false, "messages":[] },
+  {"username":"sanny",  "img":"img9.jpg", "occupato":false, "messages":[] },
+  {"username":"annie",  "img":"img10.jpg", "occupato":false, "messages":[] },
+  {"username":"carla",  "img":"img11.jpg", "occupato":false, "messages":[] },
+  {"username":"fonzie", "img":"img12.jpg", "occupato":false, "messages":[] },
+  {"username":"ralph",  "img":"img13.jpg", "occupato":false, "messages":[] },
+  {"username":"john",   "img":"img14.jpg", "occupato":false, "messages":[] },
+  {"username":"jonny",  "img":"img15.jpg", "occupato":false, "messages":[] }
+]

@@ -1,0 +1,25 @@
+body {
+  text-align: center;
+  margin-top: 50px;
+}
+.container {
+  max-width: 600px;
+  margin: auto;
+}
+.movie-poster {
+  width: 200px;
+  height: auto;
+}
+.movie-details {
+  text-align: left;
+  margin-top: 20px;
+}
+.buttons {
+  margin-top: 20px;
+}
+
+img {
+  display: block;
+  width: 280px;
+  margin: 0 auto;
+}

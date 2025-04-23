@@ -1,0 +1,34 @@
+<div class="container">
+  <div class="search-box">
+    <div>
+      <select
+        class="form-select"
+        [(ngModel)]="this.selectedCategory"
+        (change)="onChangeCategoria()"
+      >
+        <option value="*" selected>Tutti</option>
+        @for(genre of this.filmsService.genres; track $index) {
+        <option>{{ genre.nome }}</option>
+        }
+      </select>
+    </div>
+    <span>oppure</span>
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Cerca per titolo"
+      [(ngModel)]="this.selectedFilmName"
+    />
+    <button class="btn btn-primary" (click)="this.onChangeFilmName()">
+      Cerca
+    </button>
+  </div>
+</div>
+
+<div class="row flex gap-3">
+  <div class="col-12">
+    @for(film of this.filmsService.selectedFilms; track $index) {
+    <app-film [film]="film"></app-film>
+    }
+  </div>
+</div>

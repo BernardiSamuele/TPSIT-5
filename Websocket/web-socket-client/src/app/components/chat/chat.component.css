@@ -1,0 +1,42 @@
+.container > h1{
+	text-align:center;
+}
+
+.container > button{
+	margin-right:5px;
+}
+
+#wrapper {
+    height: 600px;
+    overflow: auto;
+    margin: 12px;
+    padding: 8px;
+    background-color: #fee;
+}
+
+/* queste classi sono applicate dalla funzione visualizza() 
+   ai messaggi della chat creati dinamicamente. 
+   Però gli stili definiti in questo file 
+   NON possono essere agli elementi creati dinamicamente.
+   Due possibili soluzioni:
+   1) Spostare questi stili nel file CSS globale
+   2) Definire questi stili in js in fase di creazione dinamica
+
+*/
+
+.message-img {
+	max-height:28px;
+	border-radius:14px;
+    margin-right:5px;
+}
+.message-container {
+    margin: 12px 0;
+    padding: 8px;
+    background-color: #f1eeee;
+}
+.message-data {
+    font-weight: bold;
+}
+.message-from {
+    font-style: italic;
+}

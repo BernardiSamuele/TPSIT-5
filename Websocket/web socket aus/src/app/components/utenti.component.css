@@ -1,0 +1,26 @@
+fieldset{
+	border:1px solid #ccc;
+	border-radius:6px;
+
+}
+fieldset legend{
+    margin:2px 6px 12px 6px;
+}
+
+#divUtenti{
+	input[type="radio"]{
+		margin-right:12px;
+	}
+	span{
+		display:inline-block;
+		width:100px;
+		text-align:left;
+		vertical-align:middle;
+		margin-top:-11px;
+	}	
+	img{
+		max-height:54px;
+		border-radius:16px;
+		margin:2px;
+	}
+}
