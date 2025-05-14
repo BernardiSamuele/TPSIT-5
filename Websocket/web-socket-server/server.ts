@@ -145,11 +145,22 @@ const wsServer = new Server(httpServer, { cors: { origin: '*' } });
 const users: any = [];
 wsServer.on('connection', clientSocket => {
   console.log(`Connection accepted: ${clientSocket.id}`);
+  let user;
   clientSocket.on('join-room', clientUser => {
-    const user = JSON.parse(clientUser);
+    user = JSON.parse(clientUser);
     console.log(`User ${user.username} joined room ${user.room}`);
     users.push(user);
     clientSocket.join(user.room);
     clientSocket.emit('join-result', 'ok');
+  });
+  clientSocket.on('message', message => {
+    console.log(`Message from ${user.username}: ${message}`);
+    const response = {
+      from: user.username,
+      img: user.img,
+      message: message,
+      date: new Date()
+    };
+    wsServer.to(user.room).emit('broadcast-message', JSON.stringify(response));
   });
 });

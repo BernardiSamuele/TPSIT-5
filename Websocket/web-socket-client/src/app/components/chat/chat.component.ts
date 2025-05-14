@@ -14,6 +14,7 @@ export class ChatComponent {
   connected: boolean = false;
   messaggio: string = '';
   wsClient: any;
+  messages: any[] = [];
 
   constructor(private dataStorageService: DataStorageService) {}
 
@@ -37,7 +38,17 @@ export class ChatComponent {
         document.title = this.dataStorageService.selectedUser.username;
       }
     });
+
+    this.wsClient.on('broadcast-message', (data: string) => {
+      this.messages.push(JSON.parse(data));
+      console.log(data, this.messages);
+      
+    });
   }
+  
   onDisconnetti() {}
-  invia() {}
+  invia() {
+    this.wsClient.emit('message', this.messaggio);
+    this.messaggio = '';
+  }
 }

@@ -5,6 +5,11 @@
     
     <div id="wrapper" #wrapper>  
         <!-- Qui verranno visualizzati i messaggi provenienti dagli utenti -->
+         @for (item of this.messages; track $index) {
+            <div class="message-container">
+                <img src="{{item.img}}" >{{item.message}}
+            </div>
+         }
     </div>
 
     <!-- invio di un nuovo messaggio -->
