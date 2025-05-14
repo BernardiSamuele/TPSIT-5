@@ -40,13 +40,24 @@ export class ChatComponent {
     });
 
     this.wsClient.on('broadcast-message', (data: string) => {
-      this.messages.push(JSON.parse(data));
+      const message = JSON.parse(data);
+      message.date = (new Date(message.date)).toLocaleTimeString();
+      this.messages.unshift(message);
       console.log(data, this.messages);
       
     });
+
+    // Questo evento si verifica solo se l'utente clicca disconnetti e non se esce dalla pagina
+    this.wsClient.on('disconnect', () => {
+      this.connected = false;
+      alert('Sei stato disconnesso')
+    });
   }
   
-  onDisconnetti() {}
+  onDisconnetti() {
+    this.wsClient.disconnect();
+  }
+
   invia() {
     this.wsClient.emit('message', this.messaggio);
     this.messaggio = '';

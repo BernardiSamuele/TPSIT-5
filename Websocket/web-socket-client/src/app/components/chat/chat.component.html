@@ -7,7 +7,9 @@
         <!-- Qui verranno visualizzati i messaggi provenienti dagli utenti -->
          @for (item of this.messages; track $index) {
             <div class="message-container">
-                <img src="{{item.img}}" >{{item.message}}
+                <img src="{{'/' + (item.img || 'default.jpg')}}" class="message-img">
+                <small class="message-from">{{item.from + ' @' + item.date}}</small>
+                <p class="message-data">{{item.message}}</p>
             </div>
          }
     </div>

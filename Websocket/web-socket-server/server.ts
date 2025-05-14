@@ -163,4 +163,23 @@ wsServer.on('connection', clientSocket => {
     };
     wsServer.to(user.room).emit('broadcast-message', JSON.stringify(response));
   });
+  // Questo evento si verifica anche se l'utente chiude la pagina
+  clientSocket.on('disconnect', async () => {
+    console.log('Connection closed: ' + user.username);
+    const _id = new ObjectId(user._id as string);
+    let occupato = false;
+    const client = new MongoClient(connectionString);
+    await client.connect();
+    const collection = client.db(DB_NAME).collection('users');
+    const request = collection.updateOne({ _id }, { $set: { occupato } });
+    request.then(() => {
+      console.log('Occupato set to false for user: ' + user.username);      
+    });
+    request.catch(err => {
+      console.log('Error setting occupato to false: ' + err);
+    });
+    request.finally(() => {
+      client.close();
+    });
+  });
 });
